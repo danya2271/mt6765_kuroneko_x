@@ -595,6 +595,8 @@ source "drivers/char/xillybus/Kconfig"
 
 source "drivers/char/rpmb/Kconfig"
 
+source "drivers/char/srandom/Kconfig"
+
 endmenu
 
 config RANDOM_TRUST_CPU
