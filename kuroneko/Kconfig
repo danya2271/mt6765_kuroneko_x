@@ -1,0 +1,55 @@
+comment "Kuroneko Kernel Configuration"
+
+config KURONEKO
+	bool "Enable Kuroneko features"
+	default y
+	help
+	  Enable Kuroneko additional features 
+
+	  If you are building Kuroneko release build
+	  then say Y, else say N. If unsure say N.
+
+choice
+  prompt "Kuroneko release type"
+  depends on KURONEKO
+  
+  config KURONEKO_STABLE
+  	bool "Kuroneko Stable release"
+  	help
+  	  Build Kuroneko Stable release
+  
+  	  If you are building a Kuroneko release
+  	  then say Y (recommended), else say N. If unsure say N.
+  
+  config KURONEKO_BALANCE
+  	bool "Kuroneko Balance release"
+  	help
+  	  Build Kuroneko Balance release
+  
+  	  If you are building a Kuroneko release and want it to be balanced
+  	  then say Y (recommended), else say N. If unsure say N.
+  	  
+  config KURONEKO_POWERSAVE
+  	bool "Kuroneko Powersave release"
+  	help
+  	  Build Kuroneko Powersave release
+  
+  	  If you are building a Kuroneko release and want it to be powersave
+  	  then say Y (recommended), else say N. If unsure say N.
+  	  
+  config KURONEKO_GAMING
+  	bool "Kuroneko Gaming release"
+  	help
+  	  Build Kuroneko Gaming release
+  
+  	  If you are building a Kuroneko release and want it to be for gaming
+  	  then say Y (recommended), else say N. If unsure say N.
+  
+  config KURONEKO_EXTREME
+  	bool "Kuroneko Extreme release"
+  	help
+  	  Build Kuroneko Extreme release
+  
+  	  If you are building a Kuroneko release and want it to be extreme
+  	  then say Y, else say N. If unsure say N.
+endchoice

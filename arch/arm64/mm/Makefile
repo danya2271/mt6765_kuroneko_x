@@ -1,0 +1,15 @@
+KBUILD_CFLAGS += -mcpu=cortex-a53 -Wa,-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard 
+
+obj-y				:= dma-mapping.o extable.o fault.o init.o \
+				   cache.o copypage.o flush.o \
+				   ioremap.o mmap.o pgd.o mmu.o \
+				   context.o proc.o pageattr.o
+obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+obj-$(CONFIG_ARM64_PTDUMP)	+= dump.o
+obj-$(CONFIG_NUMA)		+= numa.o
+
+obj-$(CONFIG_KASAN)		+= kasan_init.o
+KASAN_SANITIZE_kasan_init.o	:= n
+KBUILD_CPPFLAGS += -I$(srctree)/drivers/misc/mediatek/include
+
+obj-$(CONFIG_MEDIATEK_SOLUTION) += cache-mtk-v8.o

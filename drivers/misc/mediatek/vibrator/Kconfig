@@ -1,0 +1,14 @@
+config MTK_VIBRATOR
+	tristate "MediaTek Vibrator driver"
+	default y
+	  ---help---
+	  Vibrator driver support for MediaTek SOC.
+	  You can customize the vibrate strength and lowest vibrate time.
+	  If you want to use MediaTek Vibrator driver, say Y or M here.
+	  If unsure, say N.
+
+config THUNDERQUAKE_ENGINE_GPL
+	tristate "Vibrator Intensity Controller for MTK Vibrator"
+	default y
+	  ---help---
+	  Vibrator Intensity Controller for MTK Vibrator v1.0
