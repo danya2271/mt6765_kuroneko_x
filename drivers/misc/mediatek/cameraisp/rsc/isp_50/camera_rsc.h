@@ -25,7 +25,7 @@
 /*
  *   enforce kernel log enable
  */
-#define KERNEL_LOG		/* enable debug log flag if defined */
+//#define KERNEL_LOG		/* enable debug log flag if defined */
 
 #define _SUPPORT_MAX_RSC_FRAME_REQUEST_ 6
 #define _SUPPORT_MAX_RSC_REQUEST_RING_SIZE_ 4

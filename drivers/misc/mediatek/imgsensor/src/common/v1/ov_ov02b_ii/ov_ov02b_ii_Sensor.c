@@ -26,9 +26,9 @@
 #include "ov_ov02b_ii_Sensor.h"
 
 #define PFX "ov02b_camera_sensor"
-#define LOG_INF(format, args...)    \
-	pr_debug(PFX "[%s] " format, __func__, ##args)
-
+/*#define LOG_INF(format, args...)    \
+	pr_debug(PFX "[%s] " format, __func__, ##args) */
+#define LOG_INF(format, args...)
 #define VAILD_GROUP 0X1
 
 /* Camera Hardwareinfo */

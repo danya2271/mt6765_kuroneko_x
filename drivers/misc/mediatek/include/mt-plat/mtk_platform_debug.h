@@ -23,8 +23,8 @@ extern int set_sram_flag_etb_user(unsigned int etb_id, unsigned int user_id);
 #define ETB_USER_BIG_CORE       0x0
 #define ETB_USER_CM4            0x1
 #define ETB_USER_AUDIO_CM4      0x2
-#define ETB_USER_BUS_TRACER    
-#define ETB_USER_MCSIB_TRACER  
+//#define ETB_USER_BUS_TRACER    
+//#define ETB_USER_MCSIB_TRACER  
 #endif
 
 #endif /* __MTK_PLATFORM_DEBUG_H__ */

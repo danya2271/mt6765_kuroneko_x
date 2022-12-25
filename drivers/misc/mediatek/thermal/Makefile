@@ -11,8 +11,6 @@
 # GNU General Public License for more details.
 #
 ccflags-y += -I$(srctree)
-ifeq ($(CONFIG_KURONEKO_EXTREME), y)
-else
 ifeq ($(CONFIG_ARCH_MT7623), y)
 # MT2701 & MT7623 use the same thermal driver.
 THERMAL_CHIP_DRIVER_DIR := $(srctree)/drivers/misc/mediatek/thermal/mt2701
@@ -51,5 +49,4 @@ ifeq ($(CONFIG_ARCH_MT7623), y)
 obj-y += mt2701/
 else
 obj-y += $(subst ",,$(CONFIG_MTK_PLATFORM))/
-endif
 endif

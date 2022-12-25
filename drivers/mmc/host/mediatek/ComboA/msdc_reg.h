@@ -494,7 +494,7 @@
 #define EMMC51_CQCB_CURCMD              REG_ADDR(EMMC51_CQCB_CURCMD)
 #endif
 
-#define MSDC_DEBUG 
+//#define MSDC_DEBUG 
 
 #define MSDC_DBG_MSDC_DEBUG_WR_EN       (0x1 << 31)
 

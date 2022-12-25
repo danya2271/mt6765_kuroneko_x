@@ -25,9 +25,9 @@
 #include "hynix_hi259_iii_Sensor.h"
 
 #define PFX "hi259_camera_sensor"
-#define LOG_INF(format, args...)    \
-	pr_devel(PFX "[%s] " format, __func__, ##args)
-
+/*#define LOG_INF(format, args...)    \
+	pr_debug(PFX "[%s] " format, __func__, ##args) */
+#define LOG_INF(format, args...)
 #define per_frame 1
 #define hi259_vendor_id  0x41 //0x42 for Holitech
 //extern unsigned char fusion_id_back2[48];

@@ -39,7 +39,7 @@
 
 #ifndef AUD_LOG_V
 #if 0
-#define AUD_LOG_V(x...) pr_debug(x)
+#define AUD_LOG_V(x...)
 #else
 #define AUD_LOG_V(x...)
 #endif

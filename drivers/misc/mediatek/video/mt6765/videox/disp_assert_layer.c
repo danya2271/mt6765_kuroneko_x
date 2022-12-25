@@ -118,59 +118,17 @@ uint32_t DAL_GetLayerSize(void)
 
 enum DAL_STATUS DAL_SetScreenColor(enum DAL_COLOR color)
 {
-	uint32_t i;
-	uint32_t size;
-	uint32_t BG_COLOR;
-	struct MFC_CONTEXT *ctxt = NULL;
-	uint32_t offset;
-	unsigned int *addr;
-
-	color = RGB888_To_RGB565(color);
-	BG_COLOR = MAKE_TWO_RGB565_COLOR(color, color);
-
-	ctxt = (struct MFC_CONTEXT *)mfc_handle;
-	if (!ctxt)
-		return DAL_STATUS_FATAL_ERROR;
-	if (ctxt->screen_color == color)
-		return DAL_STATUS_OK;
-	offset = MFC_Get_Cursor_Offset(mfc_handle);
-	addr = (unsigned int *)(ctxt->fb_addr + offset);
-
-	size = DAL_GetLayerSize() - offset;
-	for (i = 0; i < size / sizeof(uint32_t); ++i)
-		*addr++ = BG_COLOR;
-	ctxt->screen_color = color;
-
 	return DAL_STATUS_OK;
 }
 EXPORT_SYMBOL(DAL_SetScreenColor);
 
 enum DAL_STATUS DAL_Init(unsigned long layerVA, unsigned long layerPA)
 {
-	pr_debug("%s, layerVA=0x%lx, layerPA=0x%lx\n",
-		__func__, layerVA, layerPA);
-
-	dal_fb_addr = (void *)layerVA;
-	dal_fb_pa = layerPA;
-	DAL_CHECK_MFC_RET(MFC_Open(&mfc_handle, dal_fb_addr,
-		DAL_WIDTH, DAL_HEIGHT, DAL_BPP, DAL_FG_COLOR, DAL_BG_COLOR));
-	/* DAL_Clean(); */
-	DAL_SetScreenColor(DAL_COLOR_RED);
-
 	return DAL_STATUS_OK;
 }
 
 enum DAL_STATUS DAL_SetColor(unsigned int fgColor, unsigned int bgColor)
 {
-	if (mfc_handle == NULL)
-		return DAL_STATUS_NOT_READY;
-
-	DAL_LOCK();
-	dal_fg_color = RGB888_To_RGB565(fgColor);
-	dal_bg_color = RGB888_To_RGB565(bgColor);
-	DAL_CHECK_MFC_RET(MFC_SetColor(mfc_handle, dal_fg_color, dal_bg_color));
-	DAL_UNLOCK();
-
 	return DAL_STATUS_OK;
 }
 EXPORT_SYMBOL(DAL_SetColor);
@@ -182,84 +140,12 @@ enum DAL_STATUS DAL_Dynamic_Change_FB_Layer(unsigned int isAEEEnabled)
 
 static int show_dal_layer(int enable)
 {
-	struct disp_session_input_config *session_input;
-	struct disp_input_config *input;
-	int ret;
-
-	session_input = kzalloc(sizeof(*session_input), GFP_KERNEL);
-	if (!session_input)
-		return -ENOMEM;
-
-	session_input->setter = SESSION_USER_AEE;
-	session_input->config_layer_num = 1;
-	input = &session_input->config[0];
-
-	input->src_phy_addr = (void *)dal_fb_pa;
-	input->layer_id = primary_display_get_option("ASSERT_LAYER");
-	input->layer_enable = enable;
-	input->src_offset_x = 0;
-	input->src_offset_y = 0;
-	input->src_width = DAL_WIDTH;
-	input->src_height = DAL_HEIGHT;
-	input->tgt_offset_x = 0;
-	input->tgt_offset_y = 0;
-	input->tgt_width = DAL_WIDTH;
-	input->tgt_height = DAL_HEIGHT;
-	input->alpha = 0x80;
-	input->alpha_enable = 1;
-	input->next_buff_idx = -1;
-	input->src_pitch = DAL_WIDTH;
-	input->src_fmt = DAL_FORMAT;
-	input->next_buff_idx = -1;
-	input->dirty_roi_num = 0;
-
-	ret = primary_display_config_input_multiple(session_input);
-	kfree(session_input);
-	return ret;
+	return DAL_STATUS_OK;
 }
 
 enum DAL_STATUS DAL_Clean(void)
 {
-	enum DAL_STATUS ret = DAL_STATUS_OK;
-
-	static int dal_clean_cnt;
-	struct MFC_CONTEXT *ctxt = (struct MFC_CONTEXT *)mfc_handle;
-
-	DISPMSG("[MTKFB_DAL] DAL_Clean\n");
-	if (mfc_handle == NULL)
-		return DAL_STATUS_NOT_READY;
-
-
-	mmprofile_log_ex(ddp_mmp_get_events()->dal_clean,
-		MMPROFILE_FLAG_START, 0, 0);
-	DAL_LOCK();
-	if (MFC_ResetCursor(mfc_handle) != MFC_STATUS_OK) {
-		DISPWARN("mfc_handle = %p\n", mfc_handle);
-		goto End;
-	}
-	ctxt->screen_color = 0;
-	DAL_SetScreenColor(DAL_COLOR_RED);
-
-	if (isAEEEnabled == 1) {
-		show_dal_layer(0);
-		/* DAL disable, switch UI layer to default layer 3 */
-		DISPMSG("[DDP] isAEEEnabled from 1 to 0, %d\n",
-		dal_clean_cnt++);
-		isAEEEnabled = 0;
-		/* restore UI layer to DEFAULT_UI_LAYER */
-		DAL_Dynamic_Change_FB_Layer(isAEEEnabled);
-	}
-
-	dal_shown = false;
-	dal_disable_when_resume = false;
-
-	primary_display_trigger(0, NULL, 0);
-
-End:
-	DAL_UNLOCK();
-	mmprofile_log_ex(ddp_mmp_get_events()->dal_clean,
-		MMPROFILE_FLAG_END, 0, 0);
-	return ret;
+	return DAL_STATUS_OK;
 }
 EXPORT_SYMBOL(DAL_Clean);
 

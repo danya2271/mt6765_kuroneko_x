@@ -105,16 +105,9 @@ typedef void (*PFN_PDUMP_SYNCBLOCKS)(void *pvData, PDUMP_TRANSITION_EVENT eEvent
 #ifdef PDUMP
 
 /*! Macro used to record a panic in the PDump script stream */
-#define PDUMP_PANIC(_id, _msg) do \
-		{ PVRSRV_ERROR _eE;\
-			_eE = PDumpPanic(((RGX_PDUMP_PANIC_ ## _id) & 0xFFFF), _msg, __func__, __LINE__);	\
-			PVR_LOG_IF_ERROR(_eE, "PDumpPanic");\
-		MSC_SUPPRESS_4127\
-		} while (0)
-
+#define PDUMP_PANIC(_id, _msg) do 
 /*! Macro used to record a driver error in the PDump script stream to invalidate the capture */
-#define PDUMP_ERROR(_err, _msg) \
-	(void)PDumpCaptureError(_err, _msg, __func__, __LINE__)
+#define PDUMP_ERROR(_err, _msg) 
 
 #define SZ_MSG_SIZE_MAX			PVRSRV_PDUMP_MAX_COMMENT_SIZE
 #define SZ_SCRIPT_SIZE_MAX		PVRSRV_PDUMP_MAX_COMMENT_SIZE

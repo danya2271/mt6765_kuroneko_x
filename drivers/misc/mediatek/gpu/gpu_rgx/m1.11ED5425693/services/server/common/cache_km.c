@@ -77,7 +77,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* Top-level file-local build definitions */
 #if defined(PVRSRV_ENABLE_CACHEOP_STATS) && defined(LINUX)
-#define CACHEOP_DEBUG
+//#define CACHEOP_DEBUG
 #define CACHEOP_STATS_ITEMS_MAX 			32
 #define INCR_WRAP(x)						((x+1) >= CACHEOP_STATS_ITEMS_MAX ? 0 : (x+1))
 #define DECR_WRAP(x)						((x-1) < 0 ? (CACHEOP_STATS_ITEMS_MAX-1) : (x-1))

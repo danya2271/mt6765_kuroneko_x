@@ -25,9 +25,9 @@
 #include "hynix_hi1337_i_Sensor.h"
 
 #define PFX "hi1337_camera_sensor"
-#define LOG_INF(format, args...)    \
-	pr_devel(PFX "[%s] " format, __func__, ##args)
-
+/*#define LOG_INF(format, args...)    \
+	pr_debug(PFX "[%s] " format, __func__, ##args) */
+#define LOG_INF(format, args...)
 //PDAF
 #define ENABLE_PDAF 1
 #define e2prom 0

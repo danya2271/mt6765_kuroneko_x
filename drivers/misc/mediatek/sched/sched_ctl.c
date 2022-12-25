@@ -48,19 +48,7 @@ struct sched_hint_data {
 
 #if 0
 /* debugging */
-static char met_cpu_load[16][32] = {
-	"sched_load_cpu0",
-	"sched_load_cpu1",
-	"sched_load_cpu2",
-	"sched_load_cpu3",
-	"sched_load_cpu4",
-	"sched_load_cpu5",
-	"sched_load_cpu6",
-	"sched_load_cpu7",
-	"sched_load_cpu8",
-	"sched_load_cpu9",
-	"NULL"
-};
+static char met_cpu_load[16][32] = {};
 #endif
 
 /* global */
@@ -416,7 +404,7 @@ static int __init sched_hint_init(void)
 	init_irq_work(&g_shd.irq_work, sched_irq_work);
 
 	/* check interval 20ms */
-	sched_hint_check_interval = 20;
+	sched_hint_check_interval = 40;
 
 	/* enable sched hint */
 	sched_hint_inited = 1;
@@ -878,10 +866,7 @@ static int lt_walt_table[LT_UNKNOWN_USER];
 static int walt_dbg;
 
 static char walt_maker_name[LT_UNKNOWN_USER+1][32] = {
-	"powerHAL",
-	"fpsGO",
 	"sched",
-	"debug",
 	"unknown"
 };
 
@@ -919,25 +904,8 @@ EXPORT_SYMBOL(sched_walt_enable);
 static ssize_t show_walt_info(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	unsigned int len = 0;
-	unsigned int max_len = 4096;
-	int i;
-	int supported = 0;
 
-	for (i = 0; i < LT_UNKNOWN_USER; i++)
-		len +=  snprintf(buf+len, max_len - len, "walt[%d] = %d (%s)\n",
-				i, lt_walt_table[i], walt_maker_name[i]);
-#ifdef CONFIG_SCHED_WALT
-	supported = 1;
-#endif
-	len +=  snprintf(buf+len, max_len - len,
-			"\nWALT support:%d\n", supported);
-	len +=  snprintf(buf+len, max_len - len,
-			"debug mode:%d\n", walt_dbg);
-	len +=  snprintf(buf+len, max_len - len,
-			"format: echo (debug:walt)\n");
-
-	return len;
+	return 0;
 }
 /*
  * argu1: enable debug mode
@@ -948,18 +916,6 @@ static ssize_t show_walt_info(struct kobject *kobj,
 static ssize_t store_walt_info(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf, size_t count)
 {
-	int walted = -1;
 
-	if (sscanf(buf, "%d:%d", &walt_dbg, &walted) <= 0)
-		return count;
-
-	if (walted < 0 || walted > 1 || walt_dbg < 0 || walt_dbg > 1)
-		return count;
-
-	if (walt_dbg)
-		sched_walt_enable(LT_WALT_DEBUG, walted);
-	else
-		sched_walt_enable(LT_WALT_DEBUG, 0);
-
-	return count;
+	return 0;
 }

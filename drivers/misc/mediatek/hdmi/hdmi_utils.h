@@ -22,30 +22,9 @@
 #define HDMI_LOG_LEVEL_DBG 1
 #define HDMI_LOG_LEVEL_ERR 2
 
-#define HDMI_LOG_INFO(fmt, arg...) \
-do { \
-	if (hdmi_log_lv <= HDMI_LOG_LEVEL_INFO) { \
-		pr_debug(TAG "%s,%d ", __func__, __LINE__); \
-		pr_debug(TAG fmt, ##arg); \
-	} \
-} while (0)
-
-#define HDMI_LOG_DBG(fmt, arg...) \
-do { \
-	if (hdmi_log_lv <= HDMI_LOG_LEVEL_DBG) { \
-		pr_debug(TAG "%s,%d ", __func__, __LINE__); \
-		pr_debug(TAG fmt, ##arg); \
-	} \
-} while (0)
-
-#define HDMI_LOG_ERR(fmt, arg...) \
-do { \
-	if (hdmi_log_lv <= HDMI_LOG_LEVEL_ERR) { \
-		pr_debug(TAG "%s,%d ", __func__, __LINE__); \
-		pr_debug(TAG fmt, ##arg); \
-	} \
-} while (0)
-
+#define HDMI_LOG_INFO(fmt, arg...)
+#define HDMI_LOG_DBG(fmt, arg...) 
+#define HDMI_LOG_ERR(fmt, arg...)
 #define HDMI_FUNC() \
 do { \
 	if (hdmi_log_lv <= HDMI_LOG_LEVEL_DBG) \

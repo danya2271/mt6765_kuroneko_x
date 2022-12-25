@@ -1256,8 +1256,7 @@ static long vcodec_lockhw_venc(struct VAL_HW_LOCK_T *pHWLock, char *bLockedHW)
 }
 
 
-#define ENC_LOCK_LOG \
-	"VENC_LOCKHW \%d failed, locker 0x\%lx,\%lx,0x\%lx,type:\%d"
+#define ENC_LOCK_LOG 
 
 static long vcodec_lockhw(unsigned long arg)
 {

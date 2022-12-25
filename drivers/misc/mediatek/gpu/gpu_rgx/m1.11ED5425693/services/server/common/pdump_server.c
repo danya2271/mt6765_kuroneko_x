@@ -174,6 +174,10 @@ ATOMIC_T g_sEveryLineCounter;
 # define PDUMP_REFCOUNT_PRINT(fmt, ...)
 #endif
 
+#undef PDUMP
+#undef PDUMP_DEBUG
+#undef REFCOUNT_DEBUG
+
 /* Prototype for the test/debug state dump routine used in debugging */
 void PDumpCommonDumpState(void);
 #undef PDUMP_TRACE_STATE

@@ -352,13 +352,6 @@ struct TX_PWR_PARAM {
 	int8_t cTxPwr2G4OFDM_48Mbps;
 	int8_t cTxPwr2G4OFDM_54Mbps;
 
-	int8_t cTxPwr2G4HT20_BPSK;
-	int8_t cTxPwr2G4HT20_QPSK;
-	int8_t cTxPwr2G4HT20_16QAM;
-	int8_t cTxPwr2G4HT20_MCS5;
-	int8_t cTxPwr2G4HT20_MCS6;
-	int8_t cTxPwr2G4HT20_MCS7;
-
 	int8_t cTxPwr2G4HT40_BPSK;
 	int8_t cTxPwr2G4HT40_QPSK;
 	int8_t cTxPwr2G4HT40_16QAM;
@@ -372,13 +365,6 @@ struct TX_PWR_PARAM {
 	int8_t cTxPwr5GOFDM_Reserved;
 	int8_t cTxPwr5GOFDM_48Mbps;
 	int8_t cTxPwr5GOFDM_54Mbps;
-
-	int8_t cTxPwr5GHT20_BPSK;
-	int8_t cTxPwr5GHT20_QPSK;
-	int8_t cTxPwr5GHT20_16QAM;
-	int8_t cTxPwr5GHT20_MCS5;
-	int8_t cTxPwr5GHT20_MCS6;
-	int8_t cTxPwr5GHT20_MCS7;
 
 	int8_t cTxPwr5GHT40_BPSK;
 	int8_t cTxPwr5GHT40_QPSK;

@@ -38,7 +38,7 @@ s32 pwrap_wacs2(u32 write, u32 adr, u32 wdata, u32 *rdata);
 /*_____________ROME only_____________________________________________*/
 
 /********************************************************************/
-#define PWRAP_TRACE
+//#define PWRAP_TRACE
 
 #ifdef CONFIG_FPGA_EARLY_PORTING
 

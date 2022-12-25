@@ -68,7 +68,7 @@ enum {
 	MMCQD_CMDQ_MODE_EN = 1
 };
 
-#define MT_BIO_TRACE_LATENCY (unsigned long long)(1000000000)
+#define MT_BIO_TRACE_LATENCY (unsigned long long)(1000000000000000)
 
 #define REQ_EXECQ  "exe_cq"
 #define REQ_MMCQD0 "mmcqd/0"

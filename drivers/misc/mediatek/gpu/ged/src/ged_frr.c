@@ -27,7 +27,7 @@
 
 #ifdef GED_LOGE
 #undef GED_LOGE
-#define GED_LOGE pr_debug
+#define GED_LOGE 
 #endif
 
 /* These module params are for developers to set specific fps and debug. */
