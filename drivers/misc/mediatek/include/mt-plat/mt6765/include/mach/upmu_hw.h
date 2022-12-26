@@ -2917,7 +2917,7 @@
 #define PMIC_RG_PMU_MDB_DCM_SW_MODE_SHIFT                  1
 #define PMIC_RO_HANDOVER_DEBUG_ADDR                        \
 	MT6357_TOP_HANDOVER_DEBUG0
-#define PMIC_RO_HANDOVER_DEBUG_MASK                        0xFFFF
+#define PMIC_RO_HANDOVER_DEBUG_MASK						0xFFFF
 #define PMIC_RO_HANDOVER_DEBUG_SHIFT                       0
 #define PMIC_RG_EFUSE_MAN_RST_ADDR                         \
 	MT6357_TOP_RST_CON0

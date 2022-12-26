@@ -452,54 +452,8 @@ prepare_next_round:
 			delta_power += ChoosenPwr;
 			curr_power -= ChoosenPwr;
 
-check_exclusive_core_flag:
-			/* if all non-exclusive core are throttled */
-			/* but delta_pwr is still < 0, we have to */
-			/* throttle exclusive core next round */
-			if (f_ex_core[PPM_CLUSTER_LL]
-				&& f_ex_core[PPM_CLUSTER_L]) {
-				ignore_ex_core = 1;
-				f_ex_core[PPM_CLUSTER_LL] = 0;
-				f_ex_core[PPM_CLUSTER_L] = 0;
-				if (ACT_CORE(L) > 0)
-					/* re-scan from L */
-					LxLL = PPM_CLUSTER_L;
-			}
-
-			ppm_dbg(COBRA,
-				"-delta/Cl/P=%d,%d,%d! opp/act=%d,%d/%d%d\n",
-				delta_power, ChoosenCl, ChoosenPwr,
-				opp[PPM_CLUSTER_LL], opp[PPM_CLUSTER_L],
-				ACT_CORE(LL), ACT_CORE(L));
 		}
 	}
-
-	/* Set frequency limit */
-	/* For non share buck */
-#if 0
-	if (opp[PPM_CLUSTER_LL] >= 0 && ACT_CORE(LL) > 0)
-		req->limit[PPM_CLUSTER_LL].max_cpufreq_idx =
-			freq_idx_mapping_tbl[opp[PPM_CLUSTER_LL]];
-	if (opp[PPM_CLUSTER_L] >= 0 && ACT_CORE(L) > 0)
-		req->limit[PPM_CLUSTER_L].max_cpufreq_idx =
-			freq_idx_mapping_tbl[opp[PPM_CLUSTER_L]];
-#endif
-
-	/* Set all frequency limit of the cluster */
-	/* Set OPP of Cluser n to opp[n] */
-	for_each_ppm_clusters(i) {
-		req->limit[i].max_cpufreq_idx = opp[LxLL];
-	}
-
-	ppm_dbg(COBRA,
-		"[OUT]delta=%d,opp/act/c_lmt/f_lmt=%d,%d/%d%d/%d%d/%d,%d\n",
-		delta_power,
-		opp[PPM_CLUSTER_LL], opp[PPM_CLUSTER_L],
-		ACT_CORE(LL), ACT_CORE(L),
-		req->limit[PPM_CLUSTER_LL].max_cpu_core,
-		req->limit[PPM_CLUSTER_L].max_cpu_core,
-		req->limit[PPM_CLUSTER_LL].max_cpufreq_idx,
-		req->limit[PPM_CLUSTER_L].max_cpufreq_idx);
 
 	/* error check */
 	for_each_ppm_clusters(i) {

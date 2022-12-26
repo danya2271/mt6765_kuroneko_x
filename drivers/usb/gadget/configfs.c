@@ -1680,7 +1680,7 @@ static const struct usb_gadget_driver configfs_driver_template = {
 
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
 
-#define USB_STATE_MONITOR_DELAY 5000
+#define USB_STATE_MONITOR_DELAY 6660
 static struct delayed_work usb_state_monitor_dw;
 static void do_usb_state_monitor_work(struct work_struct *work)
 {
@@ -1698,7 +1698,7 @@ static void do_usb_state_monitor_work(struct work_struct *work)
 		usb_state = "DISCONNECTED";
 	spin_unlock_irqrestore(&cdev->lock, flags);
 
-	pr_info("usb_state<%s>\n", usb_state);
+/*pr_info("usb_state<%s>\n", usb_state);  stop spamming in dmesg */
 	schedule_delayed_work(&usb_state_monitor_dw,
 		msecs_to_jiffies(USB_STATE_MONITOR_DELAY));
 }

@@ -29,7 +29,7 @@ extern "C" {
 
 /* #define UPOWER_NOT_READY (1) */ /* for bring up, remove for MP */
 /* #define EEM_NOT_SET_VOLT (1) */
-#define UPOWER_ENABLE (1)
+#define UPOWER_ENABLE (0)
 #define UPOWER_USE_DEF_CCI_TBL (1)
 
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT

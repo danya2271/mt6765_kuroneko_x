@@ -110,8 +110,8 @@ static const struct file_operations ppm_ ## name ## _proc_fops = {            \
 #undef TAG
 #define TAG     "[Power/PPM] "
 
-#define ppm_err			ppm_info
-#define ppm_warn		ppm_info
+#define ppm_err
+#define ppm_warn
 #define ppm_info(fmt, args...)
 #define ppm_dbg(type, fmt, args...)
 #define ppm_ver(fmt, args...)

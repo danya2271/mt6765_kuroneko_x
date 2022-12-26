@@ -28,8 +28,8 @@ m4u_callback_ret_t DIP_M4U_TranslationFault_callback
 /**
  * enforce kernel log enable
  */
-//#define KERNEL_LOG
-//#define ISR_LOG_ON
+#define KERNEL_LOG
+#define ISR_LOG_ON
 
 #define SIG_ERESTARTSYS 512
 /**************************************************************

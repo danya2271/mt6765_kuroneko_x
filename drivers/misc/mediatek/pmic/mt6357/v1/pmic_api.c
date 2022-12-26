@@ -5102,17 +5102,7 @@ unsigned int mt6357_upmu_set_rg_pmu_mdb_dcm_sw_mode(
 unsigned int mt6357_upmu_get_ro_handover_debug(
 	void)
 {
-	unsigned int ret = 0;
-	unsigned int val = 0;
-
-	ret = pmic_read_interface(
-		(MT6357_TOP_HANDOVER_DEBUG0),
-		(&val),
-		(PMIC_RO_HANDOVER_DEBUG_MASK),
-		(PMIC_RO_HANDOVER_DEBUG_SHIFT)
-		);
-
-	return val;
+	return 0;
 }
 
 unsigned int mt6357_upmu_set_rg_efuse_man_rst(

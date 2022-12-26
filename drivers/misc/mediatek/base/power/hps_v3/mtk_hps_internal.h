@@ -79,7 +79,7 @@
 #define EN_HPS_LOG			(0)
 
 #define HPS_HRT_BT_EN			(1)
-#define HPS_HRT_DBG_MS			(5000)
+#define HPS_HRT_DBG_MS			(7200000)
 #define HPS_BIG_CLUSTER_ID		(2)
 
 /*
