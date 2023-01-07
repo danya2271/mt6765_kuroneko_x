@@ -17,7 +17,7 @@
 	index = /bits/ 8 <0>;
 	clk_src = /bits/ 8 <MSDC0_CLKSRC_400MHZ>;
 	bus-width = <8>;
-	max-frequency = <280000000>;
+	max-frequency = <200000000>;
 	cap-mmc-highspeed;
 	mmc-ddr-1_8v;
 	mmc-hs200-1_8v;

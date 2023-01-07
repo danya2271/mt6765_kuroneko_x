@@ -35,8 +35,8 @@
 
 	/* chosen */
 	chosen: chosen {
-		bootargs = "console=tty0 console=ttyS0,921600n1 vmalloc=420M \
-page_owner=on quiet nodebugmon \
+		bootargs = "console=tty0 console=ttyS0,921600n1 vmalloc=400M \
+page_owner=on  \
 swiotlb=noforce androidboot.hardware=mt6765 \
 maxcpus=8 loop.max_part=7 \
 firmware_class.path=/vendor/firmware";
@@ -52,7 +52,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x000>;
 			enable-method = "psci";
-			clock-frequency = <2501000000>;
+			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -62,7 +62,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x001>;
 			enable-method = "psci";
-			clock-frequency = <2501000000>;
+			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -72,7 +72,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x002>;
 			enable-method = "psci";
-			clock-frequency = <2501000000>;
+			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -82,7 +82,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x003>;
 			enable-method = "psci";
-			clock-frequency = <2501000000>;
+			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -92,7 +92,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x100>;
 			enable-method = "psci";
-			clock-frequency = <2000000000>;
+			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -102,7 +102,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x101>;
 			enable-method = "psci";
-			clock-frequency = <2000000000>;
+			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -112,7 +112,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x102>;
 			enable-method = "psci";
-			clock-frequency = <2000000000>;
+			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -122,7 +122,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x103>;
 			enable-method = "psci";
-			clock-frequency = <2000000000>;
+			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -247,11 +247,18 @@ firmware_class.path=/vendor/firmware";
 		#size-cells = <2>;
 		ranges;
 
+		zmc-default {
+			compatible = "mediatek,zone_movable_cma";
+			size = <0 0xffc00000>;
+			alignment = <0 0x10000000>;
+			alloc-ranges = <0 0xc0000000 1 0x80000000>;
+		};
+
 		reserve-memory-sspm_share {
 			compatible = "mediatek,reserve-memory-sspm_share";
 			no-map;
 			status = "okay";
-			size = <0 0x10000>; /* 64K */
+			size = <0 0x110000>; /* 1M + 64K */
 			alignment = <0 0x10000>;
 			alloc-ranges = <0 0x40000000 0 0x60000000>;
 		};
@@ -259,7 +266,7 @@ firmware_class.path=/vendor/firmware";
 		reserve-memory-scp_share {
 			compatible = "mediatek,reserve-memory-scp_share";
 			no-map;
-			size = <0 0x10000>;
+			size = <0 0x00200000>;
 			alignment = <0 0x1000000>;
 			alloc-ranges = <0 0x40000000 0 0x50000000>;
 		};
@@ -267,7 +274,7 @@ firmware_class.path=/vendor/firmware";
 		consys-reserve-memory {
 			compatible = "mediatek,consys-reserve-memory";
 			no-map;
-			size = <0 0x200000>;
+			size = <0 0x400000>;
 			alignment = <0 0x1000000>;
 			alloc-ranges = <0 0x40000000 0 0x80000000>;
 		};
@@ -275,7 +282,7 @@ firmware_class.path=/vendor/firmware";
 		wifi-reserve-memory {
 			compatible = "mediatek,wifi-reserve-memory";
 			no-map;
-			size = <0 0x210000>;
+			size = <0 0x300000>;
 			alignment = <0 0x1000000>;
 			alloc-ranges = <0 0x40000000 0 0x80000000>;
 		};
@@ -295,6 +302,25 @@ firmware_class.path=/vendor/firmware";
 		};
 #endif
 
+	};
+
+	cpu_dbgapb: cpu_dbgapb@0d410000 {
+		compatible = "mediatek,hw_dbg";
+		num = <8>;
+		reg =	<0 0x0d410000 0 0x1000>,
+			<0 0x0d510000 0 0x1000>,
+			<0 0x0d610000 0 0x1000>,
+			<0 0x0d710000 0 0x1000>,
+			<0 0x0d810000 0 0x1000>,
+			<0 0x0d910000 0 0x1000>,
+			<0 0x0da10000 0 0x1000>,
+			<0 0x0db10000 0 0x1000>;
+	};
+
+	/* ATF logger SW IRQ number 279 = 32 + 247 */
+	atf_logger {
+		compatible = "mediatek,atf_logger";
+		interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
 	};
 
 	/* AMMS SW IRQ number GIC:166 DTS:134*/
@@ -450,6 +476,11 @@ firmware_class.path=/vendor/firmware";
 		#clock-cells = <1>;
 	};
 
+	efuse_dbg@10004000 {
+		compatible = "mediatek,efuse_dbg";
+		reg = <0 0x10004000 0 0x1000>;
+	};
+
 	gpio_usage_mapping:gpio {
 		compatible = "mediatek,gpio_usage_mapping";
 	};
@@ -518,20 +549,20 @@ firmware_class.path=/vendor/firmware";
 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-		clock-frequency = <15500000>;
+		clock-frequency = <13000000>;
 	};
 
 	clocks {
 		clk26m: clk26m {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
-			clock-frequency = <31000000>;
+			clock-frequency = <26000000>;
 		};
 
 		clk32k: clk32k {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
-			clock-frequency = <36000>;
+			clock-frequency = <32000>;
 		};
 	};
 
@@ -619,12 +650,23 @@ firmware_class.path=/vendor/firmware";
 		compatible = "mediatek,usb_iddig_bi_eint";
 	};
 
+	mrdump_ext_rst: mrdump_ext_rst {
+		compatible = "mediatek, mrdump_ext_rst-eint";
+		force_mode = "EINT";
+		mode = "IRQ";
+		status = "okay";
+	};
+
 	touch: touch {
 		compatible = "mediatek,touch";
 	};
 
 	accdet: accdet {
 		compatible = "mediatek,pmic-accdet";
+	};
+
+	goodix_fp: fingerprint {
+		compatible = "mediatek,goodix-fp";
 	};
 
 	fpsensor_fp_eint:fpsensor_fp_eint{
@@ -833,6 +875,14 @@ firmware_class.path=/vendor/firmware";
 		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&infracfg_ao CLK_IFR_DEVICE_APC>;
 		clock-names = "devapc-infra-clock";
+	};
+
+	bus_dbg@10208000 {
+		compatible = "mediatek,bus_dbg-v2";
+		reg = <0 0x10208000 0 0x1000>,
+			<0 0x10001000 0 0x1000>;
+		mediatek,bus_dbg_con_offset = <0x2fc>;
+		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
 	};
 
 	ap_ccif0@10209000 {
@@ -1329,6 +1379,202 @@ firmware_class.path=/vendor/firmware";
 		mediatek,enabled = <1>;
 		mediatek,chain_length = <0xc350>;
 		mediatek,rg_dfd_timeout = <0xa0>;
+	};
+
+	dbg_cti@0d020000 {
+		compatible = "mediatek,dbg_cti";
+		reg = <0 0x0d020000 0 0x10000>;
+	};
+
+	dbg_etr@0d030000 {
+		compatible = "mediatek,dbg_etr";
+		reg = <0 0x0d030000 0 0x10000>;
+	};
+
+	dbg_funnel@0d040000 {
+		compatible = "mediatek,dbg_funnel";
+		reg = <0 0x0d040000 0 0x10000>;
+	};
+
+	dbg_dem@0d0a0000 {
+		compatible = "mediatek,dbg_dem";
+		reg = <0 0x0d0a0000 0 0x10000>;
+		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>;
+	};
+
+	dbg_mdsys1@0d0c0000 {
+		compatible = "mediatek,dbg_mdsys1";
+		reg = <0 0x0d0c0000 0 0x40000>;
+	};
+
+	dbg_apmcu_mp0@0d400000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d400000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d410000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d410000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d420000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d420000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d430000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d430000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d440000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d440000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d510000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d510000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d520000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d520000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d530000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d530000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d540000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d540000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d610000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d610000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d620000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d620000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d630000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d630000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d640000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d640000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d710000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d710000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d720000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d720000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d730000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d730000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp0@0d740000 {
+		compatible = "mediatek,dbg_apmcu_mp0";
+		reg = <0 0x0d740000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d800000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d800000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d810000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d810000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d820000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d820000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d830000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d830000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d840000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d840000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d910000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d910000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d920000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d920000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d930000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d930000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0d940000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0d940000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0da10000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0da10000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0da20000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0da20000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0da30000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0da30000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0da40000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0da40000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0db10000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0db10000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0db20000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0db20000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0db30000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0db30000 0 0x1000>;
+	};
+
+	dbg_apmcu_mp1@0db40000 {
+		compatible = "mediatek,dbg_apmcu_mp1";
+		reg = <0 0x0db40000 0 0x1000>;
 	};
 
 	ap_dma@11000000 {
@@ -1913,7 +2159,7 @@ firmware_class.path=/vendor/firmware";
 		reg = <0 0x13000000 0 0x80000>;
 		interrupts = <GIC_SPI 259 IRQ_TYPE_LEVEL_LOW>;
 		interrupt-names = "RGX";
-		clock-frequency = <670000000>;
+		clock-frequency = <570000000>;
 
 	};
 

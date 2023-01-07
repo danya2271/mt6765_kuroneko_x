@@ -208,7 +208,7 @@
 
 &i2c6 {
 	tps65132_driver@3E {
-		compatible = "mediatek,I2C_LCD_BIAS";
+		compatibel = "mediatek,I2C_LCD_BIAS";
 		reg = <0x3E>;
 	};
 	ext_buck_vgpu@55 {

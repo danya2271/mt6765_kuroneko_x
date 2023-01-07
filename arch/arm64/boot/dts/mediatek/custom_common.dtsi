@@ -20,6 +20,20 @@
 /dts-v1/;
 /plugin/;
 
+/* chosen */
+&chosen {
+
+	/* fpga may has no lk, we need to specify display info here */
+	/* fb buffer is reserved using this dts by memory node above */
+	atag,videolfb-fb_base_h = <0x0>;
+	atag,videolfb-fb_base_l = <0x5e605000>;
+	atag,videolfb-islcmfound = <1>;
+	/* because no lk, so lcm is not inited */
+	atag,videolfb-islcm_inited = <0>;
+	atag,videolfb-fps= <6000>;
+	atag,videolfb-vramSize= <0x017bb000>;
+	atag,videolfb-lcmname= "hx83012d_vdo_hdp_boe_tongxingda";
+};
 
 &odm {
 	led0:led@0 {
@@ -199,30 +213,112 @@
 	ext_buck_lp4@57 {
 		regulator-name ="ext_buck_vdd2";
 		regulator-min-microvolt = <300000>;
-		regulator-max-microvolt = <1200000>;
+		regulator-max-microvolt = <1300000>;
 		vsel_pin = <0>;
 	};
 
 	ext_buck_lp4x@50 {
 		regulator-name ="ext_buck_vddq";
 		regulator-min-microvolt = <300000>;
-		regulator-max-microvolt = <1200000>;
+		regulator-max-microvolt = <1300000>;
 		vsel_pin = <1>;
 	};
 };
 
 &i2c6 {
 	tps65132_driver@3E {
-		compatible = "mediatek,I2C_LCD_BIAS";
+		compatibel = "mediatek,I2C_LCD_BIAS";
 		reg = <0x3E>;
 	};
 	ext_buck_vgpu@55 {
 		regulator-name ="ext_buck_vgpu";
-		regulator-min-microvolt = <280000>;
-		regulator-max-microvolt = <1200000>;
+		regulator-min-microvolt = <300000>;
+		regulator-max-microvolt = <1300000>;
 		vsel_pin = <2>;
 	};
 };
+/* TOUCH start */
+
+&touch {
+	tpd-resolution = <1080 1920>;
+	use-tpd-button = <0>;
+	tpd-key-num = <3>;
+	tpd-key-local= <139 172 158 0>;
+	tpd-key-dim-local = <90 883 100 40 230
+				 883 100 40 370 883 100 40 0 0 0 0>;
+	tpd-max-touch-num = <10>;
+	tpd-filter-enable = <0>;
+	tpd-filter-pixel-density = <146>;
+	tpd-filter-custom-prameters = <0 0 0 0 0 0 0 0 0 0 0 0>;
+	tpd-filter-custom-speed = <0 0 0>;
+	pinctrl-names = "default", "state_eint_as_int", "state_eint_output0",
+		"state_eint_output1", "state_rst_output0", "state_rst_output1",
+		"state_spi_cs_out0","state_spi_cs_out1";
+	pinctrl-0 = <&ctp_pins_default>;
+	pinctrl-1 = <&ctp_pins_eint_as_int>;
+	pinctrl-2 = <&ctp_pins_eint_output0>;
+	pinctrl-3 = <&ctp_pins_eint_output1>;
+	pinctrl-4 = <&ctp_pins_rst_output0>;
+	pinctrl-5 = <&ctp_pins_rst_output1>;
+	pinctrl-6 = <&ctp_pins_spi_cs_output0>;
+	pinctrl-7 = <&ctp_pins_spi_cs_output1>;
+	status = "okay";
+};
+&pio {
+	ctp_pins_default: eint0default {
+	};
+	ctp_pins_eint_as_int: eint@0 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+	ctp_pins_eint_output0: eintoutput0 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+	ctp_pins_eint_output1: eintoutput1 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+	ctp_pins_rst_output0: rstoutput0 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO174__FUNC_GPIO174>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+	ctp_pins_rst_output1: rstoutput1 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO174__FUNC_GPIO174>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	ctp_pins_spi_cs_output0: spi_cs_out0_gpio {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO22__FUNC_GPIO22>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	ctp_pins_spi_cs_output1: spi_cs_out1_gpio {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO22__FUNC_SPI3_CSB>;
+			slew-rate = <1>;
+		};
+	};
+};
+/* TOUCH end */
 
 /* CONSYS GPIO standardization */
 &pio {

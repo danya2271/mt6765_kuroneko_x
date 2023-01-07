@@ -53,12 +53,12 @@ bat_gm30: battery{
 	/*	Pseudo 100% percentage at T3.*/
 	g_FG_PSEUDO100_T3 = <(100)>;
 	/*	System shut down voltage.*/
-	Q_MAX_SYS_VOLTAGE_BAT0 = <(3380)>;
+	Q_MAX_SYS_VOLTAGE_BAT0 = <(3350)>;
 	/*	System shut down voltage.*/
-	Q_MAX_SYS_VOLTAGE_BAT1 = <(3380)>;
+	Q_MAX_SYS_VOLTAGE_BAT1 = <(3350)>;
 	/*	System shut down voltage.*/
-	Q_MAX_SYS_VOLTAGE_BAT2 = <(3380)>;
+	Q_MAX_SYS_VOLTAGE_BAT2 = <(3350)>;
 	/*	System shut down voltage.*/
-	Q_MAX_SYS_VOLTAGE_BAT3 = <(3380)>;
+	Q_MAX_SYS_VOLTAGE_BAT3 = <(3350)>;
 #include "mt6765_battery_table.dtsi"
 };
