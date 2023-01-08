@@ -291,13 +291,7 @@ firmware_class.path=/vendor/firmware";
 		soter-shared-mem {
 			compatible = "microtrust,shared_mem";
 			no-map;
-#if defined(CONFIG_MTK_SEC_VIDEO_PATH_SUPPORT) || \
-	defined(CONFIG_MTK_CAM_SECURITY_SUPPORT)
-			size = <0 0x2000000>;
-			alignment = <0 0x1000000>;
-#else
-			size = <0 0x600000>;
-#endif
+			size = <0 0x100000>;
 			alloc-ranges = <0 0x40000000 0 0x50000000>;
 		};
 #endif
@@ -1219,7 +1213,7 @@ firmware_class.path=/vendor/firmware";
 		venc_mb_done = <292>;
 		venc_128byte_cnt_done = <293>;
 		max_prefetch_cnt = <1>;
-		prefetch_size = <96>;
+		prefetch_size = <64>;
 		sram_size_cpr_64 = <64>;
 		mmsys_config = <&mmsys_config>;
 		mdp_rdma0 = <&mdp_rdma0>;
