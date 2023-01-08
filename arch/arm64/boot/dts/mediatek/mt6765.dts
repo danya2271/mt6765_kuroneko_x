@@ -317,12 +317,6 @@ firmware_class.path=/vendor/firmware";
 			<0 0x0db10000 0 0x1000>;
 	};
 
-	/* ATF logger SW IRQ number 279 = 32 + 247 */
-	atf_logger {
-		compatible = "mediatek,atf_logger";
-		interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
-	};
-
 	/* AMMS SW IRQ number GIC:166 DTS:134*/
 	amms_control {
 		compatible = "mediatek,amms";
@@ -1379,27 +1373,6 @@ firmware_class.path=/vendor/firmware";
 		mediatek,enabled = <1>;
 		mediatek,chain_length = <0xc350>;
 		mediatek,rg_dfd_timeout = <0xa0>;
-	};
-
-	dbg_cti@0d020000 {
-		compatible = "mediatek,dbg_cti";
-		reg = <0 0x0d020000 0 0x10000>;
-	};
-
-	dbg_etr@0d030000 {
-		compatible = "mediatek,dbg_etr";
-		reg = <0 0x0d030000 0 0x10000>;
-	};
-
-	dbg_funnel@0d040000 {
-		compatible = "mediatek,dbg_funnel";
-		reg = <0 0x0d040000 0 0x10000>;
-	};
-
-	dbg_dem@0d0a0000 {
-		compatible = "mediatek,dbg_dem";
-		reg = <0 0x0d0a0000 0 0x10000>;
-		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>;
 	};
 
 	dbg_mdsys1@0d0c0000 {
