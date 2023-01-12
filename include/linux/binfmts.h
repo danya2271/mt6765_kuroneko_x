@@ -46,6 +46,17 @@ struct linux_binprm {
 	unsigned long loader, exec;
 };
 
+static inline bool task_is_booster(struct task_struct *tsk)
+{
+	char comm[sizeof(tsk->comm)];
+
+	get_task_comm(comm, tsk);
+	return !strcmp(comm, "init") ||
+	       !strcmp(comm, "vendor.mediatek.hardware.mtkpower@1.0-service") ||
+	       !strcmp(comm, "thermal") ||
+	       !strcmp(comm, "mi_thermald");
+}
+
 #define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT 0
 #define BINPRM_FLAGS_ENFORCE_NONDUMP (1 << BINPRM_FLAGS_ENFORCE_NONDUMP_BIT)
 

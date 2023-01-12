@@ -19,9 +19,9 @@
  * DEBUG
  ******************************************************************************/
 #define SEC_DEBUG                   (false)
-#define SMSG                        DBG_MSG
+#define SMSG                     
 #if SEC_DEBUG
-#define DMSG                        DBG_MSG
+#define DMSG                       
 #else
 #define DMSG
 #endif

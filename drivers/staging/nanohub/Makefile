@@ -1,6 +1,7 @@
 #
 # Makefile for nanohub
 #
+KBUILD_CFLAGS += -Os
 
 obj-$(CONFIG_NANOHUB) += nanohub.o
 nanohub-y := main.o bl.o comms.o

@@ -75,15 +75,12 @@ extern "C" {
 #define DBGPRIV_LAST      0x200UL  /*!< Always set to highest mask value. Privately used by pvr_debug. */
 
 #if !defined(PVRSRV_NEED_PVR_ASSERT) && defined(DEBUG)
-#define PVRSRV_NEED_PVR_ASSERT
 #endif
 
 #if defined(PVRSRV_NEED_PVR_ASSERT) && !defined(PVRSRV_NEED_PVR_DPF)
-#define PVRSRV_NEED_PVR_DPF
 #endif
 
 #if !defined(PVRSRV_NEED_PVR_TRACE) && (defined(DEBUG) || defined(TIMING))
-#define PVRSRV_NEED_PVR_TRACE
 #endif
 
 #if !defined(DOXYGEN)

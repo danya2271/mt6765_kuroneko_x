@@ -117,13 +117,10 @@ struct compat_mmprofile_metalog_t {
 	_IOWR(MMP_IOC_MAGIC, 5, struct mmprofile_eventinfo_t)
 #define MMP_IOC_ENABLEEVENT \
 	_IOW(MMP_IOC_MAGIC, 6, struct mmprofile_eventsetting_t)
-#define MMP_IOC_LOG \
-	_IOW(MMP_IOC_MAGIC, 7, struct mmprofile_eventlog_t)
-#define MMP_IOC_DUMPEVENTINFO \
-	_IOR(MMP_IOC_MAGIC, 8, struct mmprofile_eventinfo_t)
-#define MMP_IOC_METADATALOG _IOW(MMP_IOC_MAGIC, 9, struct mmprofile_metalog_t)
-#define MMP_IOC_DUMPMETADATA \
-	_IOR(MMP_IOC_MAGIC, 10, struct mmprofile_metalog_t)
+#define MMP_IOC_LOG
+#define MMP_IOC_DUMPEVENTINFO 
+#define MMP_IOC_METADATALOG _IOW
+#define MMP_IOC_DUMPMETADATA
 #define MMP_IOC_SELECTBUFFER _IOW(MMP_IOC_MAGIC, 11, unsigned int)
 #define MMP_IOC_TRYLOG _IOWR(MMP_IOC_MAGIC, 12, unsigned int)
 #define MMP_IOC_ISENABLE _IOR(MMP_IOC_MAGIC, 13, unsigned int)

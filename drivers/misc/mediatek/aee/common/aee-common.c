@@ -33,17 +33,17 @@
 #include <mrdump_private.h>
 
 static struct aee_kernel_api *g_aee_api;
-#define KERNEL_REPORT_LENGTH 344
+#define KERNEL_REPORT_LENGTH 90
 
 #ifdef CONFIG_KGDB_KDB
 /* Press key to enter kdb */
 void aee_trigger_kdb(void)
 {
-	pr_info("User trigger KDB\n");
+//	pr_info("User trigger KDB\n");
 	/* mtk_set_kgdboc_var(); */
 	kgdb_breakpoint();
 
-	pr_info("Exit KDB\n");
+//	pr_info("Exit KDB\n");
 }
 #else
 /* For user mode or the case KDB is not enabled, print basic debug messages */
@@ -53,15 +53,15 @@ void aee_dumpbasic(void)
 
 void aee_trigger_kdb(void)
 {
-	pr_info("\nKDB is not enabled ! Dump basic debug info...\n\n");
-	aee_dumpbasic();
+//	pr_info("\nKDB is not enabled ! Dump basic debug info...\n\n");
+//	aee_dumpbasic();
 }
 #endif
 
 struct aee_oops *aee_oops_create(enum AE_DEFECT_ATTR attr,
 		enum AE_EXP_CLASS clazz, const char *module)
 {
-	struct aee_oops *oops = kzalloc(sizeof(struct aee_oops), GFP_ATOMIC);
+/*	struct aee_oops *oops = kzalloc(sizeof(struct aee_oops), GFP_ATOMIC);
 
 	if (oops == NULL)
 		return NULL;
@@ -74,13 +74,13 @@ struct aee_oops *aee_oops_create(enum AE_DEFECT_ATTR attr,
 	strlcpy(oops->backtrace, "N/A", sizeof(oops->backtrace));
 	strlcpy(oops->process_path, "N/A", sizeof(oops->process_path));
 
-	return oops;
+	return oops;*/
 }
 EXPORT_SYMBOL(aee_oops_create);
 
 void aee_oops_free(struct aee_oops *oops)
 {
-	kfree(oops->console);
+/*	kfree(oops->console);
 	kfree(oops->android_main);
 	kfree(oops->android_radio);
 	kfree(oops->android_system);
@@ -90,7 +90,7 @@ void aee_oops_free(struct aee_oops *oops)
 	vfree(oops->userthread_stack.Userthread_Stack);
 	vfree(oops->userthread_maps.Userthread_maps);
 	kfree(oops);
-	pr_notice("%s\n", __func__);
+	pr_notice("%s\n", __func__);*/
 }
 EXPORT_SYMBOL(aee_oops_free);
 
@@ -112,7 +112,7 @@ EXPORT_SYMBOL(aee_disable_api);
 void aee_kernel_exception_api(const char *file, const int line,
 		const int db_opt, const char *module, const char *msg, ...)
 {
-	char msgbuf[KERNEL_REPORT_LENGTH];
+/*	char msgbuf[KERNEL_REPORT_LENGTH];
 	int offset = 0;
 	va_list args;
 
@@ -126,14 +126,14 @@ void aee_kernel_exception_api(const char *file, const int line,
 				msgbuf);
 	else
 		pr_notice("AEE kernel exception: %s", msgbuf);
-	va_end(args);
+	va_end(args);*/
 }
 EXPORT_SYMBOL(aee_kernel_exception_api);
 
 void aee_kernel_warning_api(const char *file, const int line, const int db_opt,
 		const char *module, const char *msg, ...)
 {
-	char msgbuf[KERNEL_REPORT_LENGTH];
+/*	char msgbuf[KERNEL_REPORT_LENGTH];
 	int offset = 0;
 	va_list args;
 
@@ -154,14 +154,14 @@ void aee_kernel_warning_api(const char *file, const int line, const int db_opt,
 	} else {
 		pr_notice("AEE kernel warning: %s", msgbuf);
 	}
-	va_end(args);
+	va_end(args);*/
 }
 EXPORT_SYMBOL(aee_kernel_warning_api);
 
 void aee_kernel_reminding_api(const char *file, const int line,
 		const int db_opt, const char *module, const char *msg, ...)
 {
-	char msgbuf[KERNEL_REPORT_LENGTH];
+/*	char msgbuf[KERNEL_REPORT_LENGTH];
 	int offset = 0;
 	va_list args;
 
@@ -175,7 +175,7 @@ void aee_kernel_reminding_api(const char *file, const int line,
 				module, msgbuf);
 	else
 		pr_notice("AEE kernel reminding: %s", msgbuf);
-	va_end(args);
+	va_end(args);*/
 }
 EXPORT_SYMBOL(aee_kernel_reminding_api);
 

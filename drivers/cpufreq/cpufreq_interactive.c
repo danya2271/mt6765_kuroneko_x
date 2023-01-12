@@ -61,9 +61,9 @@ struct interactive_tunables {
 
 	/* Go to hi speed when CPU load at or above this value. */
 #ifdef CONFIG_KURONEKO_POWERSAVE
-#define DEFAULT_go_highspeed_load 50
+#define DEFAULT_go_highspeed_load 67
 #else
-#define DEFAULT_go_highspeed_load 32
+#define DEFAULT_go_highspeed_load 53
 #endif
 
 	unsigned long go_highspeed_load;
@@ -77,8 +77,8 @@ struct interactive_tunables {
 	 * The minimum amount of time to spend at a frequency before we can ramp
 	 * down.
 	 */
-#define DEFAULT_MIN_SAMPLE_TIME 17000
-	unsigned long min_sample_time;
+#define DEFAULT_MIN_SAMPLE_TIMER 49000
+	unsigned long min_sample_timer;
 
 	/* The sample rate of the timer used to increase frequency */
 	unsigned long sampling_rate;
@@ -154,9 +154,9 @@ static spinlock_t speedchange_cpumask_lock;
 
 /* Target load. Lower values result in higher CPU speeds. */
 #ifdef CONFIG_KURONEKO_POWERSAVE
-#define DEFAULT_TARGET_LOAD 84
+#define DEFAULT_TARGET_LOAD 100
 #else
-#define DEFAULT_TARGET_LOAD 71
+#define DEFAULT_TARGET_LOAD 91
 #endif
 static unsigned int default_target_load[] = {DEFAULT_TARGET_LOAD};
 
@@ -435,7 +435,7 @@ static void eval_target_freq(struct interactive_cpu *icpu)
 	 */
 	max_fvtime = max(icpu->pol_floor_val_time, icpu->loc_floor_val_time);
 	if (new_freq < icpu->floor_freq && icpu->target_freq >= policy->cur) {
-		if (now - max_fvtime < tunables->min_sample_time) {
+		if (now - max_fvtime < tunables->min_sample_timer) {
 			trace_cpufreq_interactive_notyet(cpu, cpu_load,
 				icpu->target_freq, policy->cur, new_freq);
 			goto exit;
@@ -444,7 +444,7 @@ static void eval_target_freq(struct interactive_cpu *icpu)
 
 	/*
 	 * Update the timestamp for checking whether speed has been held at
-	 * or above the selected frequency for a minimum of min_sample_time,
+	 * or above the selected frequency for a minimum of min_sample_timer,
 	 * if not boosted to highspeed_freq.  If boosted to highspeed_freq then we
 	 * allow the speed to drop as soon as the boostpulse duration expires
 	 * (or the indefinite boost is turned off).
@@ -847,7 +847,7 @@ static ssize_t store_go_highspeed_load(struct gov_attr_set *attr_set,
 	return count;
 }
 
-static ssize_t store_min_sample_time(struct gov_attr_set *attr_set,
+static ssize_t store_min_sample_timer(struct gov_attr_set *attr_set,
 				     const char *buf, size_t count)
 {
 	struct interactive_tunables *tunables = to_tunables(attr_set);
@@ -858,7 +858,7 @@ static ssize_t store_min_sample_time(struct gov_attr_set *attr_set,
 	if (ret < 0)
 		return ret;
 
-	tunables->min_sample_time = val;
+	tunables->min_sample_timer = val;
 
 	return count;
 }
@@ -987,7 +987,7 @@ static ssize_t store_io_is_busy(struct gov_attr_set *attr_set, const char *buf,
 
 show_one(highspeed_freq, "%u");
 show_one(go_highspeed_load, "%lu");
-show_one(min_sample_time, "%lu");
+show_one(min_sample_timer, "%lu");
 show_one(timer_slack, "%lu");
 show_one(boost, "%u");
 show_one(boostpulse_duration, "%u");
@@ -997,7 +997,7 @@ gov_attr_rw(target_load);
 gov_attr_rw(above_hispeed_delay);
 gov_attr_rw(highspeed_freq);
 gov_attr_rw(go_highspeed_load);
-gov_attr_rw(min_sample_time);
+gov_attr_rw(min_sample_timer);
 gov_attr_rw(timer_rate);
 gov_attr_rw(timer_slack);
 gov_attr_rw(boost);
@@ -1010,7 +1010,7 @@ static struct attribute *interactive_attributes[] = {
 	&above_hispeed_delay.attr,
 	&highspeed_freq.attr,
 	&go_highspeed_load.attr,
-	&min_sample_time.attr,
+	&min_sample_timer.attr,
 	&timer_rate.attr,
 	&timer_slack.attr,
 	&boost.attr,
@@ -1211,7 +1211,7 @@ int cpufreq_interactive_init(struct cpufreq_policy *policy)
 	tunables->go_highspeed_load = DEFAULT_go_highspeed_load;
 	tunables->target_load = default_target_load;
 	tunables->ntarget_load = ARRAY_SIZE(default_target_load);
-	tunables->min_sample_time = DEFAULT_MIN_SAMPLE_TIME;
+	tunables->min_sample_timer = DEFAULT_MIN_SAMPLE_TIMER;
 	tunables->boostpulse_duration = 6000;
 	tunables->sampling_rate = DEFAULT_SAMPLING_RATE;
 	tunables->timer_slack = DEFAULT_TIMER_SLACK;

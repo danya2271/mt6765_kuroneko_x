@@ -66,14 +66,7 @@ static DEFINE_HASHTABLE(pvr_fence_ufo_lut, 16);
 static DEFINE_SPINLOCK(pvr_fence_ufo_lut_spinlock);
 #endif
 
-#define PVR_DUMPDEBUG_LOG(pfnDumpDebugPrintf, pvDumpDebugFile, fmt, ...) \
-	do {                                                             \
-		if (pfnDumpDebugPrintf)                                  \
-			pfnDumpDebugPrintf(pvDumpDebugFile, fmt,         \
-					   ## __VA_ARGS__);              \
-		else                                                     \
-			pr_err(fmt "\n", ## __VA_ARGS__);                \
-	} while (0)
+#define PVR_DUMPDEBUG_LOG(pfnDumpDebugPrintf, pvDumpDebugFile, fmt, ...) 
 
 static inline void
 pvr_fence_sync_signal(struct pvr_fence *pvr_fence, u32 fence_sync_flags)

@@ -1,7 +1,7 @@
 #
 # Makefile for the kernel security code
 #
-KBUILD_CFLAGS += -mcpu=cortex-a53+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KBUILD_CFLAGS += -mcpu=cortex-a53+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -O3
 
 subdir-ccflags-y += -Werror
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include

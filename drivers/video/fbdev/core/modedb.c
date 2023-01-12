@@ -775,7 +775,7 @@ done:
 			int ret;
 
 			DPRINTK("CVT mode %dx%d@%dHz%s%s%s\n", xres, yres,
-				(refresh) ? refresh : 60,
+				(refresh) ? refresh : 66,
 				(rb) ? " reduced blanking" : "",
 				(margins) ? " with margins" : "",
 				(interlace) ? " interlaced" : "");
@@ -783,7 +783,7 @@ done:
 			memset(&cvt_mode, 0, sizeof(cvt_mode));
 			cvt_mode.xres = xres;
 			cvt_mode.yres = yres;
-			cvt_mode.refresh = (refresh) ? refresh : 60;
+			cvt_mode.refresh = (refresh) ? refresh : 66;
 
 			if (interlace)
 				cvt_mode.vmode |= FB_VMODE_INTERLACED;
@@ -818,7 +818,7 @@ done:
 			    info->monspecs.dclkmax) {
 				refresh = 1000;
 			} else {
-				refresh = 60;
+				refresh = 66;
 			}
 		}
 

@@ -1160,8 +1160,6 @@ void set_scp_mpu(void)
 			(uint64_t)region_info.start,
 			(uint64_t)region_info.end,
 			region_info.apc[1], region_info.apc[1]);
-
-	emi_mpu_set_protection(&region_info);
 }
 #endif
 

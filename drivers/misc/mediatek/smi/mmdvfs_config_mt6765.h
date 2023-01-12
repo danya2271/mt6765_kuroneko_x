@@ -46,8 +46,8 @@
 /* CLK Source definiation */
 /* Define the clk source description */
 struct mmdvfs_clk_source_desc mt6765_clk_sources[MT6765_CLK_SOURCE_NUM] = {
-		{NULL, "mmdvfs_clk_mmpll_ck", 457},
-		{NULL, "mmdvfs_clk_univpll1_d2_ck", 312},
+		{NULL, "mmdvfs_clk_mmpll_ck", 483},
+		{NULL, "mmdvfs_clk_univpll1_d2_ck", 341},
 		{NULL, "mmdvfs_clk_mmpll_d2_ck", 228},
 };
 
@@ -350,7 +350,7 @@ struct mmdvfs_step_profile mt6765_step_profile_lp3[MT6765_MMDVFS_OPP_MAX] = {
 
 /* Part V ISP DVFS configuration */
 #define MMDVFS_ISP_THRESHOLD_NUM 3
-int mt6765_isp_threshold_setting[MMDVFS_ISP_THRESHOLD_NUM] = {457, 312, 228};
+int mt6765_isp_threshold_setting[MMDVFS_ISP_THRESHOLD_NUM] = {483, 341, 228};
 int mt6765_isp_threshold_opp[MMDVFS_ISP_THRESHOLD_NUM] = {
 	MMDVFS_FINE_STEP_OPP0, MMDVFS_FINE_STEP_OPP2, MMDVFS_FINE_STEP_OPP4};
 

@@ -23,6 +23,6 @@
 
 /* Command for Debug */
 #define TZCMD_DBG_SECUREMEM_INFO      0
-#define TZCMD_DBG_SECURECM_INFO       1
+#define TZCMD_DBG_SECURECM_INFO       0
 
 #endif				/* __TRUSTZONE_TA_DBG__ */

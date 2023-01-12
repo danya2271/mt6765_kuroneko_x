@@ -1,3 +1,4 @@
+KBUILD_CFLAGS += -mcpu=cortex-a53+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 hostprogs-y := vdsomunge
 
 obj-vdso := vgettimeofday.o datapage.o
@@ -22,12 +23,15 @@ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
 
 CFLAGS_REMOVE_vdso.o = -pg
 
-# Force -O2 to avoid libgcc dependencies
-CFLAGS_REMOVE_vgettimeofday.o = -pg -Os
-CFLAGS_vgettimeofday.o = -O2
+# hehe
+CFLAGS_REMOVE_vgettimeofday.o = -pg -Oz
+CFLAGS_vgettimeofday.o = -O3
 
-# Disable gcov profiling for VDSO code
+# Disable gcov, kasan, ubsan and kcov profiling for VDSO code
 GCOV_PROFILE := n
+KASAN_SANITIZE := n
+UBSAN_SANITIZE := n
+KCOV_INSTRUMENT := n
 
 # Force dependency
 $(obj)/vdso.o : $(obj)/vdso.so

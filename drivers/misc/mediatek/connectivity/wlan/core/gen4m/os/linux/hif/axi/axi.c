@@ -533,8 +533,8 @@ static irqreturn_t mtk_axi_interrupt(int irq, void *dev_instance)
 
 	kalSetIntEvent(prGlueInfo);
 
-	if (__ratelimit(&_rs))
-		pr_info("[wlan] In HIF ISR.\n");
+/*	if (__ratelimit(&_rs))
+		pr_info("[wlan] In HIF ISR.\n");*/
 
 	return IRQ_HANDLED;
 }

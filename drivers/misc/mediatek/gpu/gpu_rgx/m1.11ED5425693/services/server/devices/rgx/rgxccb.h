@@ -63,7 +63,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * allocate at-least this much to be future risk-free.
  */
 #define MIN_SAFE_CCB_SIZE_LOG2         13  /* 8K (2 Pages) */
-#define MAX_SAFE_CCB_SIZE_LOG2         18  /* 256K (64 Pages) */
+#define MAX_SAFE_CCB_SIZE_LOG2         19  /* 256K (64 Pages) */
 
 #define RGX_TQ3D_CCB_SIZE_LOG2         PVRSRV_RGX_LOG2_CLIENT_CCB_SIZE_TQ3D
 static_assert(RGX_TQ3D_CCB_SIZE_LOG2 >= MIN_SAFE_CCB_SIZE_LOG2 &&

@@ -1072,7 +1072,7 @@ irqreturn_t btif_rx_dma_irq_handler(int irq, void *data)
 	static unsigned long cnt;
 	static DEFINE_RATELIMIT_STATE(_rs, 2 * HZ, 1);
 
-	BTIF_DBG_FUNC("++, p_btif(0x%p)\n", data);
+//	BTIF_DBG_FUNC("++, p_btif(0x%p)\n", data);
 
 	cnt++;
 	if (__ratelimit(&_rs)) {
@@ -1099,7 +1099,7 @@ irqreturn_t btif_rx_dma_irq_handler(int irq, void *data)
 		_btif_rx_btm_sched(p_btif);
 
 	cnt--;
-	BTIF_DBG_FUNC("--\n");
+//	BTIF_DBG_FUNC("--\n");
 
 	return IRQ_HANDLED;
 }
@@ -2659,9 +2659,6 @@ unsigned int btif_bbs_write(struct _btif_buf_str_ *p_bbs,
 						 btif_buf);
 	static DEFINE_RATELIMIT_STATE(_rs, 1 * HZ, 1);
 	bool dump_log = false;
-
-	if (__ratelimit(&_rs))
-		dump_log = true;
 
 	if (ava_len <= 0) {
 		if (dump_log) {

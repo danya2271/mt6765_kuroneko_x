@@ -286,9 +286,6 @@ void die(const char *str, struct pt_regs *regs, int err)
 	if (ESR_ELx_EC(err) == ESR_ELx_EC_DABT_CUR)
 		thread->cpu_excp++;
 
-	if (die_owner == -1)
-		aee_save_excp_regs(regs);
-
 	cpu = get_cpu();
 	if (!raw_spin_trylock_irqsave(&die_lock, flags)) {
 		if (cpu != die_owner) {

@@ -175,10 +175,6 @@ atomic_t primary_display_pt_fence_update_event = ATOMIC_INIT(0);
 static unsigned int _need_lfr_check(void);
 struct Layer_draw_info *draw;
 
-#ifndef CONFIG_MTK_DISPLAY_120HZ_SUPPORT
-static int od_need_start;
-#endif
-
 /* dvfs */
 #ifdef MTK_FB_MMDVFS_SUPPORT
 static int dvfs_last_ovl_req = HRT_LEVEL_NUM - 1;
@@ -2919,13 +2915,6 @@ static int __primary_check_trigger(void)
 		primary_display_config_full_roi(data_config,
 			pgc->dpmgr_handle, handle);
 
-#ifdef CONFIG_MTK_DISPLAY_120HZ_SUPPORT
-		if (od_need_start) {
-			od_need_start = 0;
-			disp_od_start_read(handle);
-		}
-		disp_od_update_status(handle);
-#endif
 		_cmdq_set_config_handle_dirty_mira(handle);
 		_cmdq_flush_config_handle_mira(handle, 0);
 	} else {
@@ -4132,178 +4121,17 @@ int primary_display_set_lcm_refresh_rate(int fps)
 
 int primary_display_get_lcm_refresh_rate(void)
 {
-	return pgc->lcm_refresh_rate;
+	return pgc->lcm_refresh_rate = 66;
 }
 
-#ifdef CONFIG_MTK_DISPLAY_120HZ_SUPPORT
-static int od_by_pass;
-
-void primary_display_od_bypass(int bypass)
-{
-	DISPCHECK("odbyass %d\n", bypass);
-	od_by_pass = bypass;
-}
-
-static void _display_set_refresh_rate_post_proc(int fps)
-{
-	if (fps == 66) {
-		/* TODO: switch path after adjusting fps */
-		od_need_start = 0;
-		spm_enable_sodi(1);
-	} else if (fps == 120) {
-		if (!od_by_pass)
-			od_need_start = 1;
-
-		spm_enable_sodi(0);
-	}
-}
-#endif
 
 static int request_lcm_refresh_rate_change(int fps)
 {
-#ifdef CONFIG_MTK_DISPLAY_120HZ_SUPPORT
-	static struct cmdqRecStruct *cmdq_handle, cmdq_pre_handle;
-	int ret;
-
-	if (pgc->state == DISP_SLEPT) {
-		DISPCHECK("Sleep State set lcm rate\n");
-		return -EPERM;
-	}
-
-	if (primary_display_get_lcm_max_refresh_rate() <= 66) {
-		DISPCHECK("not support set lcm rate!!\n");
-		return -EPERM;
-	}
-
-	if (fps == pgc->lcm_refresh_rate) {
-		pgc->request_fps = 0;
-		return 0;
-	}
-
-	if (cmdq_handle == NULL) {
-		ret = cmdqRecCreate(CMDQ_SCENARIO_PRIMARY_DISP, &cmdq_handle);
-		if (ret) {
-			DISPCHECK(
-				"fail to create primary cmdq handle for adjust fps\n");
-			return -EINVAL;
-		}
-	}
-	if (cmdq_pre_handle == NULL) {
-		ret = cmdqRecCreate(CMDQ_SCENARIO_PRIMARY_MEMOUT,
-			&cmdq_pre_handle);
-		if (ret) {
-			DISPCHECK(
-				"fail to create memout cmdq handle for adjust fps\n");
-			cmdqRecDestroy(cmdq_handle);
-			cmdq_handle = NULL;
-			return -EINVAL;
-		}
-	}
-	primary_display_idlemgr_kick(__func__, 0);
-
-	pgc->request_fps = fps;
-	pgc->lcm_refresh_rate = fps;
-#endif
 	return 0;
 }
 
 int _display_set_lcm_refresh_rate(int fps)
 {
-#ifdef CONFIG_MTK_DISPLAY_120HZ_SUPPORT
-	static struct cmdqRecStruct *cmdq_handle, cmdq_pre_handle;
-	disp_path_handle disp_handle;
-	struct disp_ddp_path_config *pconfig = NULL;
-	int ret = 0;
-
-	if (pgc->state == DISP_SLEPT) {
-		DISPCHECK("Sleep State set lcm rate\n");
-		return -EPERM;
-	}
-	
-	if (fps == pgc->lcm_refresh_rate && pgc->request_fps == 0)
-		return 0;
-
-	if (fps == 60 && pgc->request_fps == 66) {
-		pgc->lcm_refresh_rate = fps;
-		pgc->request_fps = 0;
-		DISPCHECK("LCM refresh rate is 60fps already\n");
-		return 0;
-	}
-
-	if (cmdq_handle == NULL) {
-		ret = cmdqRecCreate(CMDQ_SCENARIO_PRIMARY_DISP, &cmdq_handle);
-		if (ret) {
-			DISPCHECK(
-				"fail to create primary cmdq handle for adjust fps\n");
-			return -EINVAL;
-		}
-	}
-	if (cmdq_pre_handle == NULL) {
-		ret = cmdqRecCreate(CMDQ_SCENARIO_PRIMARY_MEMOUT,
-			&cmdq_pre_handle);
-		if (ret) {
-			DISPCHECK(
-				"fail to create memout cmdq handle for adjust fps\n");
-			cmdqRecDestroy(cmdq_handle);
-			cmdq_handle = NULL;
-			return -EINVAL;
-		}
-	}
-	primary_display_idlemgr_kick(__func__, 0);
-
-	/* don't move, switch need this part */
-	pgc->lcm_refresh_rate = fps;
-	pgc->request_fps = 0;
-	DISPCHECK("[refresh_rate]:fps(%d)\n", fps);
-
-	mmprofile_log_ex(ddp_mmp_get_events()->primary_switch_fps,
-		MMPROFILE_FLAG_START, fps, 0);
-
-	/* TODO: switch path before adjusting fps*/
-	/*if (fps == 120) {*/
-		/*Switch path.*/
-	/*} */
-
-	cmdqRecReset(cmdq_handle);
-	_cmdq_insert_wait_frame_done_token_mira(cmdq_handle);
-	ret = cmdqRecClearEventToken(cmdq_handle, CMDQ_EVENT_DSI_TE);
-	ret = cmdqRecWait(cmdq_handle, CMDQ_EVENT_DSI_TE);
-	/* 1.Change PLL CLOCK parameter and build fps lcm command */
-	disp_lcm_adjust_fps(cmdq_handle, pgc->plcm, fps);
-
-	/* 2.Change RDMA golden setting */
-	disp_handle = pgc->dpmgr_handle;
-	pconfig = dpmgr_path_get_last_config(disp_handle);
-	pconfig->p_golden_setting_context->fps = fps;
-	pconfig->dispif_config.dsi.PLL_CLOCK =
-		pgc->plcm->params->dsi.PLL_CLOCK;
-	dpmgr_path_ioctl(primary_get_dpmgr_handle(), cmdq_handle,
-		DDP_RDMA_GOLDEN_SETTING, pconfig);
-	/* 3.Change DSI clock */
-	dpmgr_path_ioctl(pgc->dpmgr_handle, cmdq_handle, DDP_PHY_CLK_CHANGE,
-			 &pgc->plcm->params->dsi.PLL_CLOCK);
-	/* OD Enable */
-	if (!od_by_pass) {
-		if (fps == 66)
-			disp_od_set_enabled(cmdq_handle, 1);
-		else
-			disp_od_set_enabled(cmdq_handle, 0);
-	}
-
-	if (pgc->session_mode == DISP_SESSION_DECOUPLE_MODE) {
-		/* need sync, make sure od is config done,
-		 * even if od in decouple path
-		 */
-		_cmdq_flush_config_handle_mira(cmdq_handle, 1);
-	} else {
-		_cmdq_flush_config_handle_mira(cmdq_handle, 0);
-	}
-
-	_display_set_refresh_rate_post_proc(fps);
-
-	mmprofile_log_ex(ddp_mmp_get_events()->primary_switch_fps,
-		MMPROFILE_FLAG_END, fps, 0);
-#endif
 	return 0;
 }
 
@@ -4317,14 +4145,6 @@ void primary_display_od_bypass(int bypass)
 
 static void _display_set_refresh_rate_post_proc(int fps)
 {
-	if (fps == 60) {
-		/* TODO: switch path after adjusting fps */
-		od_need_start = 0;
-	} else if (fps == 66) {
-		if (!od_by_pass)
-			od_need_start = 1;
-
-	}
 }
 
 int primary_display_get_lcm_max_refresh_rate(void)
@@ -4477,7 +4297,7 @@ int primary_display_wait_for_vsync(void *config)
 out:
 	c->vsync_ts = ts;
 	c->vsync_cnt++;
-	c->lcm_fps = pgc->lcm_refresh_rate;
+	c->lcm_fps = pgc->lcm_refresh_rate = 66;
 
 	return ret;
 }
@@ -8822,7 +8642,7 @@ int primary_display_switch_dst_mode(int mode)
 	if (pgc->lcm_refresh_rate != 120) {
 		DISPCHECK(
 			"Only support 120HZ CV switch. But lcm_refresh_rate is:%d\n",
-			pgc->lcm_refresh_rate);
+			pgc->lcm_refresh_rate = 66);
 		goto done;
 	}
 
@@ -8880,7 +8700,7 @@ int primary_display_switch_dst_mode(int mode)
 
 	/* 2.Change PLL CLOCK parameter and build fps lcm command */
 	disp_lcm_adjust_fps(pgc->cmdq_handle_config, pgc->plcm,
-		pgc->lcm_refresh_rate);
+		pgc->lcm_refresh_rate = 66);
 	disp_handle = pgc->dpmgr_handle;
 	pconfig = dpmgr_path_get_last_config(disp_handle);
 	pconfig->dispif_config.dsi.PLL_CLOCK = pgc->plcm->params->dsi.PLL_CLOCK;

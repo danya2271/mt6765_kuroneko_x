@@ -430,11 +430,12 @@ IMG_BOOL MTK_PVRSRVDebugRequestGetSilence(void)
 void
 MTK_PVRSRVDebugRequestSetSilence(IMG_BOOL bEnable)
 {
-	bQuiet = bEnable;
+/*	bQuiet = bEnable;
 	if (bQuiet == IMG_TRUE)
 		g_use_id = MTKPP_ID_SHOT_FW;
 	else
 		g_use_id = MTKPP_ID_FW;
+	*/
 }
 
 void
@@ -443,6 +444,7 @@ PVRSRVDebugRequest(PVRSRV_DEVICE_NODE *psDevNode,
 				   DUMPDEBUG_PRINTF_FUNC *pfnDumpDebugPrintf,
 				   void *pvDumpDebugFile)
 {
+#ifdef PVRSRV_ENABLE_PROCESS_STATS
 	PVRSRV_DATA *psPVRSRVData = PVRSRVGetPVRSRVData();
 	DEBUG_REQUEST_TABLE *psDebugTable =
 		(DEBUG_REQUEST_TABLE *) psDevNode->hDebugTable;
@@ -525,4 +527,5 @@ PVRSRVDebugRequest(PVRSRV_DEVICE_NODE *psDevNode,
 		/* Only notify OS of an issue if the debug dump has gone there */
 		OSWarnOn(IMG_TRUE);
 	}
+#endif
 }

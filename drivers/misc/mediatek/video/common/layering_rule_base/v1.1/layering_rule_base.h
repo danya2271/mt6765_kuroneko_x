@@ -26,7 +26,7 @@
 
 /* #define HRT_DEBUG_LEVEL1 */
 /* #define HRT_DEBUG_LEVEL2 */
-#define HRT_UT_DEBUG
+//#define HRT_UT_DEBUG
 
 #define PATH_FMT_RSZ_SHIFT 9
 #define PATH_FMT_PIPE_SHIFT 7

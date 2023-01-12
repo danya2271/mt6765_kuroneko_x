@@ -719,9 +719,9 @@ static void connlog_log_data_handler(struct work_struct *work)
 		}
 	} while (ret);
 
-	if (__ratelimit(&_rs2))
+/*	if (__ratelimit(&_rs2))
 		pr_info("[connlog] irq counter=%d module=0x%04x\n",
-			EMI_READ32(gDev.virAddrEmiLogBase + CONNLOG_IRQ_COUNTER_BASE), module);
+			EMI_READ32(gDev.virAddrEmiLogBase + CONNLOG_IRQ_COUNTER_BASE), module);*/
 	spin_lock_irqsave(&gDev.irq_lock, gDev.flags);
 	if (gDev.eirqOn)
 		mod_timer(&gDev.workTimer, jiffies + 1);

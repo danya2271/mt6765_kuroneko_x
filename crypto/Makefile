@@ -1,7 +1,7 @@
 #
 # Cryptographic API
 #
-KBUILD_CFLAGS += -mcpu=cortex-a53 -Wa,-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard 
+KBUILD_CFLAGS += -mcpu=cortex-a53 -Wa,-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -O3
 
 subdir-ccflags-y += -Werror
 

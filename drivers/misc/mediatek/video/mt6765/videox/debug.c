@@ -1286,7 +1286,7 @@ static void process_dbg_opt(const char *opt)
 		int fps = kstrtoul(p, 10, (unsigned long int *)&p);
 
 		DDPMSG("change fps\n");
-		primary_display_set_lcm_refresh_rate(fps);
+		primary_display_set_lcm_refresh_rate(66);
 		return;
 	} else if (strncmp(opt, "disp_mode:", 10) == 0) {
 		char *p = (char *)opt + 10;
@@ -1310,14 +1310,14 @@ static void process_dbg_opt(const char *opt)
 		int fps = 0;
 
 		DDPMSG("Display debug command: disp_set_max_fps start\n");
-		fps = primary_display_get_max_refresh_rate();
+		fps = 66;
 		primary_display_force_set_vsync_fps(fps, 0);
 		DDPMSG("Display debug command: disp_set_max_fps done\n");
 	} else if (strncmp(opt, "disp_set_min_fps", 16) == 0) {
 		int fps = 0;
 
 		DDPMSG("Display debug command: disp_set_min_fps start\n");
-		fps = primary_display_get_min_refresh_rate();
+		fps = 66;
 		primary_display_force_set_vsync_fps(fps, 0);
 		DDPMSG("Display debug command: disp_set_min_fps done\n");
 	} else if (strncmp(opt, "disp_enter_idle_fps", 19) == 0) {

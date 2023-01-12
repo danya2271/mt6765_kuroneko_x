@@ -1004,19 +1004,8 @@ void mmdvfs_config_util_init(void)
 	case MMDVFS_PROFILE_BIA:
 #if defined(SMI_BIA)
 #if defined(USE_DDR_TYPE)
-		if (get_dram_type() == TYPE_LPDDR3) {
-			camera_bw_config = 0x07000507;
-			normal_bw_config = 0x05000407;
-			g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6763_lp3;
-			MMDVFSMSG("g_mmdvfs_step_util init with lp3\n");
-		} else if (get_dram_type() == TYPE_LPDDR4
-			&& get_ch_num() == 1) {
-			g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6763_lp4_1ch;
-			MMDVFSMSG("g_mmdvfs_step_util init with lp4 1-ch\n");
-		} else {
-			g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6763;
-			MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");
-		}
+		g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6763;
+		MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");
 #else
 		g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6763;
 		MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");
@@ -1029,13 +1018,8 @@ void mmdvfs_config_util_init(void)
 #if defined(SMI_CER)
 		g_mmdvfs_threshandler = &mmdvfs_thres_handler_mt6765;
 #if defined(USE_DDR_TYPE)
-		if (get_dram_type() == TYPE_LPDDR3) {
-			g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6765_lp3;
-			MMDVFSMSG("g_mmdvfs_step_util init with lp3\n");
-		} else{
-			g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6765;
-			MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");
-		}
+		g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6765;
+		MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");
 #else
 		g_mmdvfs_adaptor = &mmdvfs_adaptor_obj_mt6765;
 		MMDVFSMSG("g_mmdvfs_step_util init with lp4 2-ch\n");

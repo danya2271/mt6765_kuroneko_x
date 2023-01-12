@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <linux/bio.h>
 #include <linux/module.h>

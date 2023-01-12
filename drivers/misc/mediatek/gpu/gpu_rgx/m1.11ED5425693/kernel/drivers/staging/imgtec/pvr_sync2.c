@@ -159,14 +159,7 @@ static inline ktime_t sync_pt_get_timestamp(struct sync_pt *pt)
 #define DPF(fmt, ...) do {} while (0)
 #endif
 
-#define PVR_DUMPDEBUG_LOG(pfnDumpDebugPrintf, pvDumpDebugFile, ...) \
-	do { \
-		if (pfnDumpDebugPrintf) { \
-			pfnDumpDebugPrintf(pvDumpDebugFile, __VA_ARGS__); \
-		} else { \
-			pr_info("pvr_sync2: " __VA_ARGS__); \
-		} \
-	} while (0)
+#define PVR_DUMPDEBUG_LOG(pfnDumpDebugPrintf, pvDumpDebugFile, ...) 
 
 #define SYNC_MAX_POOL_SIZE 10
 

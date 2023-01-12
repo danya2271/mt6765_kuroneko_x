@@ -171,6 +171,9 @@ GPUOP(SEG3_GPU_DVFS_FREQ2, SEG3_GPU_DVFS_VOLT2, SEG3_GPU_DVFS_VSRAM1, 2),
 GPUOP(SEG3_GPU_DVFS_FREQ3, SEG3_GPU_DVFS_VOLT3, SEG3_GPU_DVFS_VSRAM1, 3),
 GPUOP(SEG3_GPU_DVFS_FREQ4, SEG3_GPU_DVFS_VOLT4, SEG3_GPU_DVFS_VSRAM1, 4),
 GPUOP(SEG3_GPU_DVFS_FREQ5, SEG3_GPU_DVFS_VOLT5, SEG3_GPU_DVFS_VSRAM1, 5),
+GPUOP(SEG3_GPU_DVFS_FREQ6, SEG3_GPU_DVFS_VOLT6, SEG3_GPU_DVFS_VSRAM1, 6),
+GPUOP(SEG3_GPU_DVFS_FREQ7, SEG3_GPU_DVFS_VOLT7, SEG3_GPU_DVFS_VSRAM1, 7),
+GPUOP(SEG3_GPU_DVFS_FREQ8, SEG3_GPU_DVFS_VOLT8, SEG3_GPU_DVFS_VSRAM1, 8),
 };
 static struct g_opp_table_info g_opp_table_segment4[] = {
 GPUOP(SEG4_GPU_DVFS_FREQ0, SEG4_GPU_DVFS_VOLT0, SEG4_GPU_DVFS_VSRAM0, 0),
@@ -2544,8 +2547,8 @@ static int __mt_gpufreq_pdrv_probe(struct platform_device *pdev)
 			ARRAY_SIZE(g_opp_table_segment1));
 		g_fixed_vsram_volt_idx = 0;
 	} else if (g_segment_id == MT6762_SEGMENT) {
-		__mt_gpufreq_setup_opp_table(g_opp_table_segment2,
-			ARRAY_SIZE(g_opp_table_segment2));
+		__mt_gpufreq_setup_opp_table(g_opp_table_segment3,
+			ARRAY_SIZE(g_opp_table_segment3));
 		g_fixed_vsram_volt_idx = 2;
 	} else if (g_segment_id == MT6765_SEGMENT) {
 		__mt_gpufreq_setup_opp_table(g_opp_table_segment3,

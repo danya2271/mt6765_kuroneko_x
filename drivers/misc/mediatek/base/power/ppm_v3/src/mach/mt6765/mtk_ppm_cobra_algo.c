@@ -410,7 +410,6 @@ prepare_next_round:
 					/* check LL next round */
 					LxLL = (LxLL == PPM_CLUSTER_L)
 						? PPM_CLUSTER_LL : LxLL;
-					goto check_exclusive_core_flag;
 				}
 
 				if ((ignore_ex_core ||

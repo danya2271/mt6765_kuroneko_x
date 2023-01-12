@@ -222,9 +222,9 @@ static unsigned int ksm_thread_pages_to_scan = 100;
 
 /* Milliseconds ksmd should sleep between batches */
 #ifdef CONFIG_KURONEKO_POWERSAVE
-static unsigned int ksm_thread_sleep_millisecs = 240;
+static unsigned int ksm_thread_sleep_millisecs = 940;
 #else
-static unsigned int ksm_thread_sleep_millisecs = 160;
+static unsigned int ksm_thread_sleep_millisecs = 700;
 #endif
 
 #ifdef CONFIG_NUMA

@@ -53,7 +53,7 @@
 /* used by ARR2.0 */
 int primary_display_get_cur_refresh_rate(void)
 {
-	return primary_display_force_get_vsync_fps();
+	return 66;
 }
 
 int primary_display_get_max_refresh_rate(void)
@@ -80,15 +80,15 @@ int primary_display_set_refresh_rate(unsigned int refresh_rate)
 	int temp_refresh_rate_min = 0;
 	int temp_refresh_rate_max = 0;
 
-	temp_refresh_rate_min = primary_display_get_min_refresh_rate();
-	temp_refresh_rate_max = primary_display_get_max_refresh_rate();
+	temp_refresh_rate_min = 66;
+	temp_refresh_rate_max = 66;
 
 	if ((refresh_rate > temp_refresh_rate_max) ||
 		(refresh_rate < temp_refresh_rate_min))
 		return ret;
 
 	/* AP set refresh rate */
-	ret = primary_display_force_set_vsync_fps(refresh_rate, 0);
+	ret = primary_display_force_set_vsync_fps(66, 0);
 	return ret;
 }
 

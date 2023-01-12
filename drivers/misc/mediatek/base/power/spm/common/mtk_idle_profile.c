@@ -520,7 +520,8 @@ void mtk_idle_latency_profile(unsigned int idle_type, int idx)
 }
 
 static char plog[256] = { 0 };
-#define log(fmt, args...) 
+#define log(fmt, args...) \
+		(p += scnprintf(p, sizeof(plog) - strlen(plog), fmt, ##args))
 
 #define PROFILE_LATENCY_NUMBER	(200)
 struct idle_profile_data {

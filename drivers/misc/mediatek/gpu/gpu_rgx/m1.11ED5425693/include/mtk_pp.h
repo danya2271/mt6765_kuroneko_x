@@ -48,11 +48,7 @@ void MTKPP_Deinit(void);
 
 MTK_PROC_PRINT_DATA *MTKPP_GetData(MTKPP_ID id);
 
-#define MTKPP_LOG(id, ...) 																\
-	do { 																				\
-		MTK_PROC_PRINT_DATA *mtkpp_data = MTKPP_GetData(id); 							\
-		if (mtkpp_data != NULL) { mtkpp_data->pfn_print(mtkpp_data, __VA_ARGS__); } 	\
-	} while(0)
+#define MTKPP_LOG(id, ...)
 
 /* print log into both kerne log and gpulog for time sync */
 void MTKPP_LOGTIME(MTKPP_ID id, const char *);

@@ -194,24 +194,6 @@ static irqreturn_t violation_irq(int irq, void *dev_id)
 
 int emi_mpu_set_protection(struct emi_region_info_t *region_info)
 {
-	unsigned int start, end;
-	int i;
-
-	if (region_info->region >= EMI_MPU_REGION_NUM) {
-		pr_info("[MPU] can not support region %u\n",
-			region_info->region);
-		return -1;
-	}
-
-	start = (unsigned int)(region_info->start >> EMI_MPU_ALIGN_BITS) |
-		(region_info->region << 24);
-
-	for (i = EMI_MPU_DGROUP_NUM - 1; i >= 0; i--) {
-		end = (unsigned int)(region_info->end >> EMI_MPU_ALIGN_BITS) |
-			(i << 24);
-		emi_mpu_smc_protect(start, end, region_info->apc[i]);
-	}
-
 	return 0;
 }
 EXPORT_SYMBOL(emi_mpu_set_protection);
@@ -441,7 +423,6 @@ static ssize_t mpu_store(
 			region_info.start = start;
 			region_info.end = end;
 			region_info.region = (unsigned int)region;
-			emi_mpu_set_protection(&region_info);
 		}
 	} else if (!strncmp(buf, "OFF", strlen("OFF"))) {
 		if (i < 2)
@@ -480,8 +461,6 @@ static void protect_ap_region(void)
 		get_max_DRAM_size();
 	region_info.region = AP_REGION_ID;
 	set_ap_region_permission(region_info.apc);
-
-	emi_mpu_set_protection(&region_info);
 }
 #endif
 

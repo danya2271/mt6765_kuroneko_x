@@ -10,7 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-KBUILD_CFLAGS += -Wno-unused-variable
+KBUILD_CFLAGS += -Wno-unused-variable -ffast-math
 
 obj-$(CONFIG_MACH_MT3967) += drcc_v1/
 obj-$(CONFIG_MACH_MT6779) += drcc_v1/

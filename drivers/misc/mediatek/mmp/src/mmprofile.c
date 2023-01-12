@@ -1926,10 +1926,8 @@ static long mmprofile_ioctl(struct file *file, unsigned int cmd,
 }
 
 #ifdef CONFIG_COMPAT
-#define COMPAT_MMP_IOC_METADATALOG \
-	_IOW(MMP_IOC_MAGIC, 9, struct compat_mmprofile_metalog_t)
-#define COMPAT_MMP_IOC_DUMPMETADATA \
-	_IOR(MMP_IOC_MAGIC, 10, struct compat_mmprofile_metalog_t)
+#define COMPAT_MMP_IOC_METADATALOG 
+#define COMPAT_MMP_IOC_DUMPMETADATA 
 static long mmprofile_ioctl_compat(struct file *file, unsigned int cmd,
 	unsigned long arg)
 {

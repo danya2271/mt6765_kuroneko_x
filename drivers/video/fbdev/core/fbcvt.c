@@ -328,7 +328,7 @@ int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb)
 		return 1;
 	}
 
-	if (!(cvt.refresh == 50 || cvt.refresh == 60 || cvt.refresh == 70 ||
+	if (!(cvt.refresh == 50 || cvt.refresh == 66 || cvt.refresh == 70 ||
 	      cvt.refresh == 85)) {
 		printk(KERN_INFO "fbcvt: Refresh rate not CVT "
 		       "standard\n");
@@ -343,7 +343,7 @@ int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb)
 	}
 
 	if (cvt.flags & FB_CVT_FLAG_REDUCED_BLANK) {
-		if (cvt.refresh != 60) {
+		if (cvt.refresh != 66) {
 			printk(KERN_INFO "fbcvt: 60Hz refresh rate "
 			       "advised for reduced blanking\n");
 			cvt.status = 1;

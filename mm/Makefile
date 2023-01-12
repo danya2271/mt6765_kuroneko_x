@@ -1,7 +1,7 @@
 #
 # Makefile for the linux memory manager.
 #
-KBUILD_CFLAGS += -mcpu=cortex-a53+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KBUILD_CFLAGS += -mcpu=cortex-a53+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -O2
 
 subdir-ccflags-y += -Werror
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/include

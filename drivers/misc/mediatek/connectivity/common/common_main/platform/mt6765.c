@@ -968,7 +968,6 @@ static INT32 consys_emi_mpu_set_region_protection(VOID)
 			FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
 			FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
 			NO_PROTECTION, FORBIDDEN, NO_PROTECTION);
-	emi_mpu_set_protection(&region_info);
 #endif
 	return 0;
 }

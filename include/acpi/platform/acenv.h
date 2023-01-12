@@ -138,7 +138,7 @@
 
 #ifdef ACPI_LIBRARY
 #define ACPI_USE_LOCAL_CACHE
-#define ACPI_DEBUGGER 1
+#define ACPI_DEBUGGER 0
 #define ACPI_DISASSEMBLER 1
 
 #ifdef _DEBUG
@@ -156,7 +156,7 @@
 
 #ifdef ACPI_FULL_DEBUG
 #define ACPI_DEBUG_OUTPUT
-#define ACPI_DEBUGGER 1
+#define ACPI_DEBUGGER 0
 #define ACPI_DISASSEMBLER 1
 #endif
 

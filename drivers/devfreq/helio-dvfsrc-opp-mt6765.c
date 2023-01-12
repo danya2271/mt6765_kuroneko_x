@@ -91,7 +91,11 @@ void dvfsrc_opp_level_mapping(void)
 	set_pwrap_cmd(VCORE_OPP_3, 4);
 
 	if (is_vcore_ct) {
+#ifdef CONFIG_KURONEKO_EXTREME
+		vcore_opp_0_uv = 980000 - get_vb_volt(VCORE_OPP_0);
+#else
 		vcore_opp_0_uv = 800000 - get_vb_volt(VCORE_OPP_0);
+#endif
 		vcore_opp_1_uv = 700000 - get_vb_volt(VCORE_OPP_1);
 		vcore_opp_2_uv = 700000 - get_vb_volt(VCORE_OPP_2);
 		vcore_opp_3_uv = 650000 + get_vb_volt(VCORE_OPP_3);
@@ -123,7 +127,11 @@ void dvfsrc_opp_level_mapping(void)
 				vcore_opp_2_uv,
 				vcore_opp_3_uv);
 	} else {
+#ifdef CONFIG_KURONEKO_EXTREME
+		vcore_opp_0_uv = 980000;
+#else
 		vcore_opp_0_uv = 800000;
+#endif
 		vcore_opp_1_uv = 700000;
 		vcore_opp_3_uv = 650000 + get_vb_volt(VCORE_OPP_3);
 		/* apply MD VB */

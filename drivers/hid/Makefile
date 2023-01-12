@@ -1,6 +1,8 @@
 #
 # Makefile for the HID driver
 #
+KBUILD_CFLAGS += -Os
+
 hid-y			:= hid-core.o hid-input.o
 hid-$(CONFIG_DEBUG_FS)		+= hid-debug.o
 

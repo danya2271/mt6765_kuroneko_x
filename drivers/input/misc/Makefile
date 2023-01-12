@@ -3,6 +3,7 @@
 #
 
 # Each configuration option enables a list of files.
+KBUILD_CFLAGS += -Os
 
 obj-$(CONFIG_INPUT_88PM860X_ONKEY)	+= 88pm860x_onkey.o
 obj-$(CONFIG_INPUT_88PM80X_ONKEY)	+= 88pm80x_onkey.o

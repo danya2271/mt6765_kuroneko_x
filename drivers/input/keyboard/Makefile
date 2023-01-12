@@ -3,6 +3,7 @@
 #
 
 # Each configuration option enables a list of files.
+KBUILD_CFLAGS += -Os
 
 obj-$(CONFIG_KEYBOARD_ADC)		+= adc-keys.o
 obj-$(CONFIG_KEYBOARD_ADP5520)		+= adp5520-keys.o

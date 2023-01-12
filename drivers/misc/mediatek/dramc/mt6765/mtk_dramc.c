@@ -1078,15 +1078,15 @@ unsigned int get_dram_data_rate(void)
 			u4DataRate = 0;
 	} else if ((DRAM_TYPE == TYPE_LPDDR4) || (DRAM_TYPE == TYPE_LPDDR4X)) {
 		if (u4DataRate == 3198)
-			u4DataRate = 5350;
+			u4DataRate = 3400;
 		else if (u4DataRate == 3068)
-			u4DataRate = 4068;
+			u4DataRate = 3400;
 		else if (u4DataRate == 2392)
-			u4DataRate = 5350;
+			u4DataRate = 2500;
 		else if (u4DataRate == 1599)
-			u4DataRate = 1800;
+			u4DataRate = 1700;
 		else if (u4DataRate == 1534)
-			u4DataRate = 1734;
+			u4DataRate = 1634;
 		else
 			u4DataRate = 0;
 	} else
@@ -1120,15 +1120,13 @@ unsigned int get_shuffle_status(void)
 
 int get_ddr_type(void)
 {
-	return DRAM_TYPE;
-
+	return TYPE_LPDDR4X;
 }
 EXPORT_SYMBOL(get_ddr_type);
 
 unsigned char get_ddr_mr(unsigned int index)
 {
-	return (unsigned char)get_dram_mr(index);
-
+	return 0; //(unsigned char)get_dram_mr(index);
 }
 EXPORT_SYMBOL(get_ddr_mr);
 
@@ -1164,7 +1162,7 @@ int dram_steps_freq(unsigned int step)
 			freq = 1200;
 		else if ((DRAM_TYPE == TYPE_LPDDR4) ||
 				(DRAM_TYPE == TYPE_LPDDR4X))
-			freq = 1534;
+			freq = 2034;
 		break;
 	default:
 		return -1;
@@ -1555,11 +1553,7 @@ static int dram_probe(struct platform_device *pdev)
 		return -1;
 	}
 
-#ifdef EMI_READY
-	DRAM_TYPE = get_dram_type();
-#else
-	DRAM_TYPE = TYPE_LPDDR3;
-#endif
+	DRAM_TYPE = TYPE_LPDDR4X;
 	dramc_info("dram type =%d\n", DRAM_TYPE);
 
 	if (!DRAM_TYPE) {
@@ -1622,7 +1616,7 @@ static int dram_probe(struct platform_device *pdev)
 		init_timer_deferrable(&zqcs_timer);
 		zqcs_timer.function = zqcs_timer_callback;
 		zqcs_timer.data = 0;
-		if (mod_timer(&zqcs_timer, jiffies + msecs_to_jiffies(280)))
+		if (mod_timer(&zqcs_timer, jiffies + msecs_to_jiffies(240)))
 			dramc_info("Error in ZQCS mod_timer\n");
 	}
 

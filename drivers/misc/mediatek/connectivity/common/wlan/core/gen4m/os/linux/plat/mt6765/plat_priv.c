@@ -107,7 +107,6 @@ void kalSetEmiMpuProtection(phys_addr_t emiPhyBase, bool enable)
 			      FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
 			      FORBIDDEN, FORBIDDEN, FORBIDDEN, NO_PROTECTION,
 			      FORBIDDEN, enable ? FORBIDDEN : NO_PROTECTION);
-	emi_mpu_set_protection(&region_info);
 }
 
 void kalSetDrvEmiMpuProtection(phys_addr_t emiPhyBase, uint32_t offset,
@@ -124,6 +123,5 @@ void kalSetDrvEmiMpuProtection(phys_addr_t emiPhyBase, uint32_t offset,
 			      FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
 			      FORBIDDEN, FORBIDDEN, FORBIDDEN, NO_PROTECTION,
 			      FORBIDDEN, NO_PROTECTION);
-	emi_mpu_set_protection(&region_info);
 }
 #endif

@@ -10,6 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
+KBUILD_CFLAGS += -ffast-math
 
 GED_TOP = $(srctree)/drivers/misc/mediatek/gpu/ged
 MTK_TOP = $(srctree)/drivers/misc/mediatek/
@@ -44,7 +45,7 @@ ccflags-y += -DGED_KPI_CPU_TRI_CLUSTER
 endif
 
 ifneq (,$(filter $(CONFIG_MTK_PLATFORM), "mt6739"))
-ccflags-y += -DGED_KPI_CPU_SINGLE_CLUSTER
+#ccflags-y += -DGED_KPI_CPU_SINGLE_CLUSTER
 endif
 
 ifneq (,$(filter $(CONFIG_MTK_PLATFORM), "mt6765"))
@@ -65,13 +66,9 @@ ccflags-y += -DGED_MODULE_LATE_INIT
 endif
 endif
 
-ifneq ($(strip $(TARGET_BUILD_VARIANT)),)
-ifneq ($(strip $(TARGET_BUILD_VARIANT)),eng)
 VER:=user
 ccflags-y += -DGED_LOG_SIZE_LIMITED
 ccflags-y += -DGED_BUFFER_LOG_DISABLE
-endif
-endif
 
 ccflags-y += -DMET_USER_EVENT_SUPPORT
 
@@ -124,11 +121,7 @@ endif
 ccflags-y += -DGED_LOG_SIZE_LIMITED
 ccflags-y += -DGED_BUFFER_LOG_DISABLE
 
-ccflags-y += -DGED_DVFS_DEBUG_BUF
-
-ifeq ($(VER),eng)
-ccflags-y += -DGED_DEBUG_IOCTL_LOCK
-endif
+#ccflags-y += -DGED_DVFS_DEBUG_BUF
 
 ccflags-y += \
 	-include $(GED_TOP)/include/config_kernel_$(VER).h

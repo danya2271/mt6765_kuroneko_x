@@ -319,21 +319,9 @@
 
 /* Helper macros for DEBUG_PRINT */
 
-#define ACPI_DO_DEBUG_PRINT(function, level, line, filename, modulename, component, ...) \
-	ACPI_DO_WHILE0 ({ \
-		if (ACPI_IS_DEBUG_ENABLED (level, component)) \
-		{ \
-			function (level, line, filename, modulename, component, __VA_ARGS__); \
-		} \
-	})
-
-#define ACPI_ACTUAL_DEBUG(level, line, filename, modulename, component, ...) \
-	ACPI_DO_DEBUG_PRINT (acpi_debug_print, level, line, \
-		filename, modulename, component, __VA_ARGS__)
-
-#define ACPI_ACTUAL_DEBUG_RAW(level, line, filename, modulename, component, ...) \
-	ACPI_DO_DEBUG_PRINT (acpi_debug_print_raw, level, line, \
-		filename, modulename, component, __VA_ARGS__)
+#define ACPI_DO_DEBUG_PRINT(function, level, line, filename, modulename, component, ...) 
+#define ACPI_ACTUAL_DEBUG(level, line, filename, modulename, component, ...) 
+#define ACPI_ACTUAL_DEBUG_RAW(level, line, filename, modulename, component, ...)
 
 #define ACPI_DEBUG_PRINT(plist)         ACPI_ACTUAL_DEBUG plist
 #define ACPI_DEBUG_PRINT_RAW(plist)     ACPI_ACTUAL_DEBUG_RAW plist

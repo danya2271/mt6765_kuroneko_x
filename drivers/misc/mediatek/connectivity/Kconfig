@@ -1,3 +1,10 @@
+config MTK_MODULES
+	tristate "Build Connectivity Modules"
+	default n
+	help
+	  Say y if you want to build connectivity modules
+	  
+
 config MTK_COMBO
 	tristate "MediaTek Connectivity Combo Chip Support"
 	help

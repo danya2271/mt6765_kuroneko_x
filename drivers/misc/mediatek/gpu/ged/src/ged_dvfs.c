@@ -25,6 +25,7 @@
 #endif
 
 #include <mt-plat/mtk_gpu_utility.h>
+#include <mt-plat/mtk_battery.h>
 
 #include <asm/siginfo.h>
 #include <linux/sched.h>
@@ -168,7 +169,7 @@ extern unsigned long (*mtk_get_gpu_custom_upbound_freq_fp)(void);
 
 extern void ged_monitor_3D_fence_set_enable(GED_BOOL bEnable);
 
-static unsigned int g_ui32TargetPeriod_us = 16666;
+static unsigned int g_ui32TargetPeriod_us = 1;
 static unsigned int g_ui32BoostValue = 100;
 
 static unsigned int ged_commit_freq;
@@ -1096,18 +1097,24 @@ static bool ged_dvfs_policy(
 	ged_log_buf_print(ghLogBuf_DVFS, "[GED_K] loading %u", ui32GPULoading);
 
 	/* GPU FREQUENCY POLICY */
-		if (ui32GPULoading >= 60)
+		if (ui32GPULoading >= 75)
 			i32NewFreqID = 0;
-		else if (ui32GPULoading >= 15)
+		else if (ui32GPULoading >= 50)
 			i32NewFreqID = 1;
-		else if (ui32GPULoading >= 6)
+		else if (ui32GPULoading >= 27)
 			i32NewFreqID = 2;
-		else if (ui32GPULoading >= 4)
+		else if (ui32GPULoading >= 16)
 			i32NewFreqID = 3;
-		else if (ui32GPULoading >= 2)
+		else if (ui32GPULoading >= 12)
 			i32NewFreqID = 4;
-		else if (ui32GPULoading <= 1)
+		else if (ui32GPULoading >= 6)
 			i32NewFreqID = 5;
+		else if (ui32GPULoading >= 4)
+			i32NewFreqID = 6;
+		else if (ui32GPULoading >= 1)
+			i32NewFreqID = 7;
+		else if (ui32GPULoading == 0)
+			i32NewFreqID = 8;
 
 	if (i32NewFreqID > i32MaxLevel)
 		i32NewFreqID = i32MaxLevel;
