@@ -2770,7 +2770,7 @@ firmware_class.path=/vendor/firmware";
 		ta-elf-size = <0 0x1000000>;
 		ta-stack-heap-size = <0 0x6000000>;
 		sdsp-tee-sharedmem-size = <0 0x1000000>;
-		sdsp-firmware-size = <0 0x1000000
+		sdsp-firmware-size = <0 0x1000000>;
 	};
 
 	audio_snd_card {

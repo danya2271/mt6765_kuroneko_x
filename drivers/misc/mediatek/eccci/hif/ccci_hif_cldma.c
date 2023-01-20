@@ -1585,10 +1585,6 @@ void cldma_stop(unsigned char hif_id)
 				CLDMA_AP_UL_STATUS);
 		if ((++count) % 100000 == 0) {
 			if (count >= 1600000) {
-				/* After confirmed with EMI,
-				 * Only call before EE
-				 */
-				dump_emi_latency();
 				break;
 			}
 		}
@@ -1614,10 +1610,6 @@ void cldma_stop(unsigned char hif_id)
 					& (1 << MD_DBG_DUMP_SMEM)) {
 				}
 			if (count >= 1600000) {
-				/* After confirmed with EMI,
-				 * Only call before EE
-				 */
-				dump_emi_latency();
 				break;
 			}
 		}
@@ -1709,10 +1701,6 @@ void cldma_stop_for_ee(unsigned char hif_id)
 				& (1 << MD_DBG_DUMP_SMEM)) {
 			}
 			if (count >= 1600000) {
-				/* After confirmed with EMI,
-				 * Only call before EE
-				 */
-				dump_emi_latency();
 				break;
 			}
 		}
@@ -1735,10 +1723,6 @@ void cldma_stop_for_ee(unsigned char hif_id)
 			if (md_dbg_dump_flag & (1 << MD_DBG_DUMP_SMEM)) {
 			}
 			if (count >= 1600000) {
-				/* After confirmed with EMI,
-				 * Only call before EE
-				 */
-				dump_emi_latency();
 				break;
 			}
 		}

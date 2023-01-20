@@ -68,62 +68,7 @@ EXPORT_SYMBOL(mtk_dpidle_is_active);
 
 static ssize_t idle_state_read(char *ToUserBuf, size_t sz_t, void *priv)
 {
-	int i;
-	char *p = ToUserBuf;
-	size_t sz = sz_t;
-
-	#undef log
-	#define log(fmt, args...)
-
-	log("*************** idle state ***********************\n");
-	for (i = 0; i < nr_cpu_ids; i++) {
-		log("cpu%d: dp=%lu, so3=%lu, so=%lu\n"
-			, i, dp_cnt[i], so3_cnt[i], so_cnt[i]);
-	}
-	log("\n");
-
-	log("*************** variable dump ********************\n");
-	log("feature enable: dp=%d, so3=%d, so=%d\n",
-		mtk_dpidle_enabled() ? 1 : 0,
-		mtk_sodi3_enabled() ? 1 : 0,
-		mtk_sodi_enabled() ? 1 : 0);
-
-	log("idle_ratio_profile=%d\n", mtk_idle_get_ratio_status() ? 1 : 0);
-	log("idle_latency_profile=%d\n"
-			, mtk_idle_latency_profile_is_on() ? 1 : 0);
-	log("twam_handler:%s (clk:%s)\n",
-		(mtk_idle_get_twam()->running) ? "on" : "off",
-		(mtk_idle_get_twam()->speed_mode) ? "speed" : "normal");
-	log("screen_off_sodi3=%d (%s)\n",
-		mtk_idle_screen_off_sodi3 ? 1 : 0,
-		mtk_idle_screen_off_sodi3 ? "so3->dp->so" : "dp->so3->so");
-
-	log("\n");
-
-	log("**************** mtk_spm_arch **********************\n");
-	log("mtk_spm_arch: %s-oriented\n",
-		mtk_spm_arch_type_get() ? "resource" : "scenario");
-	log("\n");
-
-	#define MTK_DEBUGFS_IDLE	"/d/cpuidle/idle_state"
-	#define MTK_DEBUGFS_DPIDLE	"/d/cpuidle/dpidle_state"
-	#define MTK_DEBUGFS_SODI3	"/d/cpuidle/soidle3_state"
-	#define MTK_DEBUGFS_SODI	"/d/cpuidle/soidle_state"
-
-	log("*************** idle command help ****************\n");
-	log("status help:          cat %s\n", MTK_DEBUGFS_IDLE);
-	log("dpidle help:          cat %s\n", MTK_DEBUGFS_DPIDLE);
-	log("sodi help:            cat %s\n", MTK_DEBUGFS_SODI);
-	log("sodi3 help:           cat %s\n", MTK_DEBUGFS_SODI3);
-	log("idle ratio profile:   echo ratio 1/0 > %s\n", MTK_DEBUGFS_IDLE);
-	log("idle latency profile: echo latency 1/0 > %s\n", MTK_DEBUGFS_IDLE);
-	log("cgmon off/dp/so3/so:  echo cgmon 0/1/2/3 > %s\n",
-		MTK_DEBUGFS_IDLE);
-	log("mtk_spm_arch_type:    echo spm_arch_type 0/1 > %s\n",
-		MTK_DEBUGFS_IDLE);
-	log("\n");
-
-	return p - ToUserBuf;
+	return 0;
 }
 
 static ssize_t idle_state_write(char *FromUserBuf, size_t sz, void *priv)
