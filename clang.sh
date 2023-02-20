@@ -1,0 +1,2 @@
+#!/bin/bash
+make CC=/run/media/danya227/ed22fa59-f1a8-4a46-8f8a-1f5123fdedeb/clang/bin/clang-9 CROSS_COMPILE_ARM32=/mnt/alps/gcc-linaro-13.0.0-2022.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- CROSS_COMPILE=/home/danya227/gcc-linaro-13.0.0-2022.10-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu- O=out ARCH=arm64 -j20 $1 $2 $3 $4 $5 Image.gz

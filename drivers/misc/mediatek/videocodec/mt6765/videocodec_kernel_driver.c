@@ -2843,22 +2843,22 @@ static int vcodec_suspend_notifier(struct notifier_block *nb,
 {
 	int wait_cnt = 0;
 
-	pr_info("vcodec_suspend_notifier ok action = %ld", action);
+	pr_info("%s ok action = %ld", __func__, action);
 	switch (action) {
 	case PM_SUSPEND_PREPARE:
 		is_entering_suspend = 1;
 		while (CodecHWLock.pvHandle != 0) {
 			wait_cnt++;
 			if (wait_cnt > 90) {
-				pr_info("vcodec_pm_suspend waiting %p %d",
-					CodecHWLock.pvHandle,
+				pr_info("%s waiting %p %d",
+					__func__, CodecHWLock.pvHandle,
 					(int)CodecHWLock.eDriverType);
 				/* Current task is still not finished, don't
 				 * care, will check again in real suspend
 				 */
 				return NOTIFY_DONE;
 			}
-			msleep(1);
+			usleep_range(1000, 2000);
 		}
 		return NOTIFY_OK;
 	case PM_POST_SUSPEND:

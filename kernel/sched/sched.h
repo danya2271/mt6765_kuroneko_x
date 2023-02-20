@@ -577,7 +577,6 @@ struct root_domain {
 
 	/* Indicate more than one runnable task for any CPU */
 	bool overload;
-
 	/* Indicate one or more cpus over-utilized (tipping point) */
 	bool overutilized;
 
@@ -1683,6 +1682,12 @@ static inline void __add_nr_running(struct rq *rq, unsigned count)
 	}
 
 	sched_update_tick_dependency(rq);
+	rq->nr_running++;
+
+	if (rq->nr_running >= 2) {
+		if (!rq->rd->overload)
+			rq->rd->overload = true;
+	}
 }
 
 static inline void __sub_nr_running(struct rq *rq, unsigned count)

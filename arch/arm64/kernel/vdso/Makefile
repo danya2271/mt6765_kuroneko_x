@@ -16,7 +16,7 @@ ccflags-y += -nostdlib -Wl,-soname=linux-vdso.so.1 \
 ccflags-y += $(DISABLE_LTO)
 
 # hehe
-CFLAGS_REMOVE_vgettimeofday.o = -pg -Oz
+CFLAGS_REMOVE_vgettimeofday.o = -pg -O3
 CFLAGS_vgettimeofday.o = -O3 -fPIC
 ifneq ($(cc-name),clang)
 CFLAGS_vgettimeofday.o += -mcmodel=tiny

@@ -642,12 +642,12 @@ static void bq2560x_dump_regs(struct bq2560x *bq)
 	u8 val;
 	int ret;
 
-	for (addr = 0x0; addr <= 0x0B; addr++) {
+/*	for (addr = 0x0; addr <= 0x0B; addr++) {
 		ret = bq2560x_read_byte(bq, &val, addr);
 		if (ret == 0)
 			pr_err("Reg[%.2x] = 0x%.2x\n", addr, val);
 	}
-
+*/
 
 }
 
@@ -743,8 +743,8 @@ static int bq2560x_charging(struct charger_device *chg_dev, bool enable)
   	{
 		ret = bq2560x_disable_charger(bq);
    	}
-	pr_err("%s charger %s\n", enable ? "enable" : "disable",
-				  !ret ? "successfully" : "failed");
+//	pr_err("%s charger %s\n", enable ? "enable" : "disable",
+//				  !ret ? "successfully" : "failed");
 
 	ret = bq2560x_read_byte(bq, &val, BQ2560X_REG_01);
 	if (!ret && !rc )

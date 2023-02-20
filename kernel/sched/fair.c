@@ -9192,10 +9192,12 @@ static inline void update_cpu_stats_if_tickless(struct rq *rq) { }
  * @overload: Indicate more than one runnable task for any CPU.
  * @overutilized: Indicate overutilization for any CPU.
  */
-static inline void update_sg_lb_stats(struct lb_env *env,
-			struct sched_group *group, int load_idx,
-			int local_group, struct sg_lb_stats *sgs,
-			bool *overload, bool *overutilized)
+static inline void update_sg_lb_stats(struct sched_domain *sd,
+			struct sched_group *group, int this_cpu,
+			enum cpu_idle_type idle, int load_idx,
+			int local_group, const struct cpumask *cpus,
+			int *balance, struct sg_lb_stats *sgs,
+			bool *overload)
 {
 	unsigned long load;
 	int i, nr_running;
@@ -9231,7 +9233,11 @@ static inline void update_sg_lb_stats(struct lb_env *env,
 #ifdef CONFIG_NUMA_BALANCING
 		sgs->nr_numa_running += rq->nr_numa_running;
 		sgs->nr_preferred_running += rq->nr_preferred_running;
-#endif
+#endif		sgs->sum_nr_running += rq->nr_running;
+
+		if (rq->nr_running > 1)
+			*overload = true;
+
 		sgs->sum_weighted_load += weighted_cpuload(i);
 		/*
 		 * No need to call idle_cpu() if nr_running is not 0
@@ -9405,11 +9411,15 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
 		struct sg_lb_stats *sgs = &tmp_sgs;
 		int local_group;
 
-		local_group = cpumask_test_cpu(env->dst_cpu, sched_group_cpus(sg));
-		if (local_group) {
+/*		local_group = cpumask_test_cpu(env->dst_cpu, sched_group_cpus(sg));
+*/		if (local_group) {
 			sds->local = sg;
 			sgs = &sds->local_stat;
-
+		local_group = cpumask_test_cpu(this_cpu, sched_group_cpus(sg));
+		memset(&sgs, 0, sizeof(sgs));
+		update_sg_lb_stats(sd, sg, this_cpu, idle, load_idx,
+				local_group, cpus, balance, &sgs, &overload);
+}
 			if (env->idle != CPU_NEWLY_IDLE ||
 			    time_after_eq(jiffies, sg->sgc->next_update))
 				update_group_capacity(env->sd, env->dst_cpu);
@@ -9490,7 +9500,13 @@ next_group:
 			trace_sched_overutilized(true);
 		}
 	}
+	} while (sg != sd->groups);
 
+	if (!env->sd->parent) {
+		/* update overload indicator if we are at root domain */
+		if (env->dst_rq->rd->overload != overload)
+			env->dst_rq->rd->overload = overload;
+	}
 }
 
 /**
@@ -10321,6 +10337,11 @@ static int idle_balance(struct rq *this_rq)
 
 	if (cpu_isolated(this_cpu))
 		return 0;
+	this_rq->idle_stamp = this_rq->clock;
+
+	if (this_rq->avg_idle < sysctl_sched_migration_cost ||
+	    !this_rq->rd->overload)
+		return;
 
 	/*
 	 * We must set idle_stamp _before_ calling idle_balance(), such that we
