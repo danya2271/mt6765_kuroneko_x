@@ -75,7 +75,13 @@ static inline void update_idle_core(struct rq *rq) { }
 #ifdef CONFIG_64BIT
 # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
 # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
+# define scale_load_down(w) \
+({ \
+	unsigned long __w = (w); \
+	if (__w) \
+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
+	__w; \
+})
 #else
 # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
 # define scale_load(w)		(w)
@@ -577,6 +583,7 @@ struct root_domain {
 
 	/* Indicate more than one runnable task for any CPU */
 	bool overload;
+
 	/* Indicate one or more cpus over-utilized (tipping point) */
 	bool overutilized;
 
@@ -1682,12 +1689,6 @@ static inline void __add_nr_running(struct rq *rq, unsigned count)
 	}
 
 	sched_update_tick_dependency(rq);
-	rq->nr_running++;
-
-	if (rq->nr_running >= 2) {
-		if (!rq->rd->overload)
-			rq->rd->overload = true;
-	}
 }
 
 static inline void __sub_nr_running(struct rq *rq, unsigned count)

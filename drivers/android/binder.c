@@ -593,8 +593,6 @@ enum {
 	BINDER_LOOPER_STATE_INVALID     = 0x08,
 	BINDER_LOOPER_STATE_WAITING     = 0x10,
 	BINDER_LOOPER_STATE_POLL        = 0x20,
-	BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
-	BINDER_LOOPER_STATE_POLL	= 0x40,
 };
 
 /**
@@ -4792,6 +4790,17 @@ static int binder_thread_release(struct binder_proc *proc,
 			spin_lock(&t->lock);
 	}
 
+	/*
+	 * If this thread used poll, make sure we remove the waitqueue
+	 * from any epoll data structures holding it with POLLFREE.
+	 * waitqueue_active() is safe to use here because we're holding
+	 * the inner lock.
+	 */
+	if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
+	    waitqueue_active(&thread->wait)) {
+		wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
+	}
+
 	binder_inner_proc_unlock(thread->proc);
 
 	/*
@@ -4822,11 +4831,8 @@ static unsigned int binder_poll(struct file *filp,
 		return POLLERR;
 
 	binder_inner_proc_lock(thread->proc);
-	wait_for_proc_work = binder_available_for_proc_work_ilocked(thread);
 	thread->looper |= BINDER_LOOPER_STATE_POLL;
-
-	wait_for_proc_work = thread->transaction_stack == NULL &&
-		list_empty(&thread->todo) && thread->return_error == BR_OK;
+	wait_for_proc_work = binder_available_for_proc_work_ilocked(thread);
 
 	binder_inner_proc_unlock(thread->proc);
 

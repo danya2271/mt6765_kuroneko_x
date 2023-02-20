@@ -77,7 +77,7 @@
 				bat,vid = <0x29cf>;
 				bat,pid = <0x1711>;
 				bat,mfrs = "bat1";
-				bat,design_cap = <3000>;
+				bat,design_cap = <5000>;
 			};
 
 			//bat-info1 {
