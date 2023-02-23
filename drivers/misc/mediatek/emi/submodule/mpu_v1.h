@@ -29,7 +29,7 @@
 #define SEC_R_NSEC_RW	6
 
 #define UNLOCK		0
-#define LOCK		1
+#define LOCK		0 /*Force unlock everything*/
 
 #define EMI_MPU_DGROUP_NUM	(EMI_MPU_DOMAIN_NUM / 8)
 #if (EMI_MPU_DGROUP_NUM == 1)
