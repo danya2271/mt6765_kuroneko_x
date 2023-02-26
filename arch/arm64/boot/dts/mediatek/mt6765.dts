@@ -36,9 +36,9 @@
 	/* chosen */
 	chosen: chosen {
 		bootargs = "console=tty0 console=ttyS0,921600n1 vmalloc=425M \
-page_owner=on  quiet nodebugmon no_debug_objects \
-androidboot.hardware=mt6765 \
-maxcpus=8 loop.max_part=16 \
+page_owner=on  quiet nodebugmon no_debug_objects androidboot.veritymode=eio \
+androidboot.hardware=mt6765 noirqdebug \
+maxcpus=8 \
 firmware_class.path=/vendor/firmware";
 		kaslr-seed = <0 0>;
 	};
@@ -52,7 +52,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x000>;
 			enable-method = "psci";
-			clock-frequency = <2301000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -62,7 +62,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x001>;
 			enable-method = "psci";
-			clock-frequency = <2301000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -72,7 +72,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x002>;
 			enable-method = "psci";
-			clock-frequency = <2301000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -82,7 +82,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x003>;
 			enable-method = "psci";
-			clock-frequency = <2301000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -92,7 +92,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x100>;
 			enable-method = "psci";
-			clock-frequency = <1800000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -102,7 +102,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x101>;
 			enable-method = "psci";
-			clock-frequency = <1800000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -112,7 +112,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x102>;
 			enable-method = "psci";
-			clock-frequency = <1800000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -122,7 +122,7 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x103>;
 			enable-method = "psci";
-			clock-frequency = <1800000000>;
+			clock-frequency = <2601000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -173,17 +173,17 @@ firmware_class.path=/vendor/firmware";
 			MCDI_CPU: mcdi-cpu {
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x00010001>;
-				entry-latency-us = <500>;
-				exit-latency-us = <500>;
-				min-residency-us = <1000>;
+				entry-latency-us = <400>;
+				exit-latency-us = <400>;
+				min-residency-us = <800>;
 			};
 
 			MCDI_CLUSTER: mcdi-cluster {
 				compatible = "arm,idle-state";
 				arm,psci-suspend-param = <0x01010001>;
-				entry-latency-us = <500>;
-				exit-latency-us = <500>;
-				min-residency-us = <1000>;
+				entry-latency-us = <400>;
+				exit-latency-us = <400>;
+				min-residency-us = <800>;
 			};
 
 			SODI: sodi {
@@ -282,7 +282,7 @@ firmware_class.path=/vendor/firmware";
 		wifi-reserve-memory {
 			compatible = "mediatek,wifi-reserve-memory";
 			no-map;
-			size = <0 0x300000>;
+			size = <0 0x400000>;
 			alignment = <0 0x1000000>;
 			alloc-ranges = <0 0x40000000 0 0x80000000>;
 		};
@@ -291,7 +291,7 @@ firmware_class.path=/vendor/firmware";
 		soter-shared-mem {
 			compatible = "microtrust,shared_mem";
 			no-map;
-			size = <0 0x200000>;
+			size = <0 0x300000>;
 			alloc-ranges = <0 0x40000000 0 0x50000000>;
 		};
 #endif
@@ -618,13 +618,6 @@ firmware_class.path=/vendor/firmware";
 
 	otg_iddig: otg_iddig{
 		compatible = "mediatek,usb_iddig_bi_eint";
-	};
-
-	mrdump_ext_rst: mrdump_ext_rst {
-		compatible = "mediatek, mrdump_ext_rst-eint";
-		force_mode = "EINT";
-		mode = "IRQ";
-		status = "okay";
 	};
 
 	touch: touch {
@@ -1187,7 +1180,7 @@ firmware_class.path=/vendor/firmware";
 		venc_mb_done = <292>;
 		venc_128byte_cnt_done = <293>;
 		max_prefetch_cnt = <1>;
-		prefetch_size = <64>;
+		prefetch_size = <96>;
 		sram_size_cpr_64 = <64>;
 		mmsys_config = <&mmsys_config>;
 		mdp_rdma0 = <&mdp_rdma0>;
@@ -1925,7 +1918,7 @@ firmware_class.path=/vendor/firmware";
 		reg = <0 0x13000000 0 0x80000>;
 		interrupts = <GIC_SPI 259 IRQ_TYPE_LEVEL_LOW>;
 		interrupt-names = "RGX";
-		clock-frequency = <570000000>;
+		clock-frequency = <1600000000>;
 
 	};
 
@@ -2006,7 +1999,7 @@ firmware_class.path=/vendor/firmware";
 
 	mmdvfs_pmqos {
 		compatible = "mediatek,mmdvfs_pmqos";
-		mm_step0 = <457 1 0 1>;
+		mm_step0 = <497 1 0 1>;
 		mm_step1 = <312 1 0 2>;
 		mm_step2 = <228 1 0 3>;
 		vopp_steps = <0 1 3>;
@@ -2621,10 +2614,10 @@ firmware_class.path=/vendor/firmware";
 		usb_charger_current_unconfigured = <70000>;
 		usb_charger_current_configured = <500000>;
 		usb_charger_current = <500000>;
-		ac_charger_current = <2048000>;
-		ac_charger_input_current = <2180000>;
+		ac_charger_current = <2448000>;
+		ac_charger_input_current = <2480000>;
 		non_std_ac_charger_current = <1020000>;
-		charging_host_charger_current = <1500000>;
+		charging_host_charger_current = <1900000>;
 		apple_1_0a_charger_current = <650000>;
 		apple_2_1a_charger_current = <800000>;
 		ta_ac_charger_current = <3000000>;
@@ -2763,14 +2756,6 @@ firmware_class.path=/vendor/firmware";
 		compatible = "mediatek,memory-ssmr-features";
 		svp-size = <0 0x10000000>;
 		iris-recognition-size = <0 0x10000000>;
-		2d_fr-size = <0 0x8000000>;
-		tui-size = <0 0x4000000>;
-		wfd-size = <0 0x4000000>;
-		prot-sharedmem-size = <0 0x8000000>;
-		ta-elf-size = <0 0x1000000>;
-		ta-stack-heap-size = <0 0x6000000>;
-		sdsp-tee-sharedmem-size = <0 0x1000000>;
-		sdsp-firmware-size = <0 0x1000000>;
 	};
 
 	audio_snd_card {
