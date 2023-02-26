@@ -894,6 +894,9 @@ int fts_fw_resume(void)
     } else if (strcmp(mtkfb_lcm_name, "ft8006s_ab_vdo_hdp_boe_helitai_drv")) {
     snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
              FTS_FW_NAME_PREX_WITH_REQUEST_AB, upg->module_info->vendor_name);
+    } else if (strcmp(mtkfb_lcm_name, "ft8006s_ac_vdo_hdp_boe_helitai_drv")) {
+    snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+             FTS_FW_NAME_PREX_WITH_REQUEST_AB, upg->module_info->vendor_name);
     }
 
     /* 1. request firmware */
@@ -1022,6 +1025,9 @@ static int fts_get_fw_file_via_request_firmware(struct fts_upgrade *upg)
     	snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
              FTS_FW_NAME_PREX_WITH_REQUEST_AA, upg->module_info->vendor_name);
     } else if (strcmp(mtkfb_lcm_name, "ft8006s_ab_vdo_hdp_boe_helitai_drv")) {
+    snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+             FTS_FW_NAME_PREX_WITH_REQUEST_AB, upg->module_info->vendor_name);
+    } else if (strcmp(mtkfb_lcm_name, "ft8006s_ac_vdo_hdp_boe_helitai_drv")) {
     snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
              FTS_FW_NAME_PREX_WITH_REQUEST_AB, upg->module_info->vendor_name);
     }
