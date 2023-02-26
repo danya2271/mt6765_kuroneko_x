@@ -16,17 +16,6 @@ extern int printk_disable_uart;
 extern bool mt_get_uartlog_status(void);
 extern void set_uartlog_status(bool value);
 
-
-#ifdef CONFIG_MTK_PRINTK_UART_CONSOLE
-void mt_disable_uart(void);
-void mt_enable_uart(void);
-extern int mt_need_uart_console;
-#endif
-
-#ifdef CONFIG_MTK_AEE_FEATURE
-extern void aee_wdt_zap_locks(void);
-#endif
-
 #ifndef KBUILD_MODNAME
 #define KBUILD_MODNAME "unknown module"
 #endif
@@ -72,7 +61,7 @@ static inline const char *printk_skip_level(const char *buffer)
 #define CONSOLE_LOGLEVEL_SILENT  0 /* Mum's the word */
 #define CONSOLE_LOGLEVEL_MIN	 1 /* Minimum loglevel we let people use */
 #define CONSOLE_LOGLEVEL_QUIET	 4 /* Shhh ..., when booted with "quiet" */
-#define CONSOLE_LOGLEVEL_DEFAULT 7 /* anything MORE serious than KERN_DEBUG */
+#define CONSOLE_LOGLEVEL_DEFAULT 4 /* anything MORE serious than KERN_DEBUG */
 #define CONSOLE_LOGLEVEL_DEBUG	10 /* issue debug messages */
 #define CONSOLE_LOGLEVEL_MOTORMOUTH 15	/* You can't shut this one up */
 
@@ -300,37 +289,6 @@ extern asmlinkage void dump_stack(void) __cold;
  * or CONFIG_DYNAMIC_DEBUG is set.
  */
 
-/* -------printk too much patch------ */
-#if defined CONFIG_MTK_ENG_BUILD \
-	&& defined CONFIG_PRINTK_MT_PREFIX \
-	&& defined CONFIG_DYNAMIC_DEBUG
-#define pr_emerg(fmt, ...) \
-	dynamic_pr_emerg(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_alert(fmt, ...) \
-	dynamic_pr_alert(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_crit(fmt, ...) \
-	dynamic_pr_crit(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_err(fmt, ...) \
-	dynamic_pr_err(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_warning(fmt, ...) \
-	dynamic_pr_warn(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_warn(fmt, ...) \
-	dynamic_pr_warn(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_notice(fmt, ...) \
-	dynamic_pr_notice(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_info(fmt, ...)          \
-	dynamic_pr_info(KLOG_MODNAME fmt, ##__VA_ARGS__) \
-
-#define pr_cont(fmt, ...) \
-			printk(KERN_CONT fmt, ##__VA_ARGS__)
-#else
 #define pr_emerg(fmt, ...) \
 			printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
 #define pr_alert(fmt, ...) \
@@ -346,6 +304,40 @@ extern asmlinkage void dump_stack(void) __cold;
 			printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
 #define pr_info(fmt, ...) \
 			printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+			
+#ifdef CONFIG_FK_LOG
+#define pr_no_notice(fmt, ...) 				\
+({							\
+	do {						\
+		if (0)					\
+			printk(fmt, ##__VA_ARGS__);	\
+	} while (0);					\
+	0;						\
+})
+#define pr_no_info(fmt, ...) 				\
+({							\
+	do {						\
+		if (0)					\
+			printk(fmt, ##__VA_ARGS__);	\
+	} while (0);					\
+	0;						\
+})
+#define pr_no_debug(fmt, ...) 				\
+({							\
+	do {						\
+		if (0)					\
+			printk(fmt, ##__VA_ARGS__);	\
+	} while (0);					\
+	0;						\
+})
+#else
+#define pr_no_notice(fmt, ...) \
+			printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_no_info(fmt, ...) \
+			printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+#define pr_no_debug(fmt, ...) \
+	printk(KERN_DEBUG KLOG_MODNAME pr_fmt(fmt), ##__VA_ARGS__)
+#endif
 /*
  * Like KERN_CONT, pr_cont() should only be used when continuing
  * a line with no newline ('\n') enclosed. Otherwise it defaults
@@ -353,7 +345,6 @@ extern asmlinkage void dump_stack(void) __cold;
  */
 #define pr_cont(fmt, ...) \
 			printk(KERN_CONT fmt, ##__VA_ARGS__)
-#endif
 
 /* pr_devel() should produce zero code unless DEBUG is defined */
 #ifdef DEBUG

@@ -732,8 +732,8 @@ endif # FTRACE
 endif # TRACING_SUPPORT
 
 if TRACING
-config FUCK_MTK_LOG
-	bool "FUCK_MTK_LOG"
+config FK_LOG
+	bool "FK_LOG"
 	help
-		FUCK MTK LOG
+		FK LOG
 endif # TRACING
