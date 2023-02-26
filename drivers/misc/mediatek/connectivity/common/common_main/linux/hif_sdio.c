@@ -1287,7 +1287,7 @@ INT32 mtk_wcn_hif_sdio_abort(MTK_WCN_HIF_SDIO_CLTCTX ctx)
 	 * read CTMDPCR1(0xBC) to switch function 2
 	 */
 	sdio_readl(func, 0xBC, &ret);
-	ret = KERNEL_mmc_io_rw_direct(func->card, 1, 0, SDIO_CCCR_ABORT, func->num, NULL);
+	ret = 0;
 	sdio_release_host(func);
 	osal_ftrace_print("%s|E|L|\n", __func__);
 

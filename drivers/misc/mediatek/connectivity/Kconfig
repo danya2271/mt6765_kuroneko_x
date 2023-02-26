@@ -1,9 +1,6 @@
-config MTK_MODULES
-	tristate "Build Connectivity Modules"
-	default n
-	help
-	  Say y if you want to build connectivity modules
-	  
+config WLAN_DRV_BUILD_IN
+	bool "WLAN_DRV_BUILD_IN"
+	default y
 
 config MTK_COMBO
 	tristate "MediaTek Connectivity Combo Chip Support"

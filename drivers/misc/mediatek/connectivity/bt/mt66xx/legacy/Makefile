@@ -26,7 +26,7 @@ ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/linux/include
 ###############################################################################
 
 MODULE_NAME := bt_drv
-obj-m += $(MODULE_NAME).o
+obj-y += $(MODULE_NAME).o
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 

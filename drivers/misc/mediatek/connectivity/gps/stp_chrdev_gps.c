@@ -47,8 +47,6 @@ MODULE_LICENSE("GPL");
 
 #define GPS_DRIVER_NAME "mtk_stp_GPS_chrdev"
 #define GPS_DEV_MAJOR 191	/* never used number */
-#define GPS_DEBUG_TRACE_GPIO         0
-#define GPS_DEBUG_DUMP               0
 
 #define PFX                         "[GPS] "
 #define GPS_LOG_DBG                  3
@@ -235,28 +233,9 @@ ssize_t GPS_write(struct file *filp, const char __user *buf, size_t count, loff_
 			goto out;
 		}
 		/* pr_warn("%02x ", val); */
-#if GPS_DEBUG_TRACE_GPIO
-		mtk_wcn_stp_debug_gpio_assert(IDX_GPS_TX, DBG_TIE_LOW);
-#endif
+
 		written = mtk_wcn_stp_send_data(&o_buf[0], copy_size, GPS_TASK_INDX);
-#if GPS_DEBUG_TRACE_GPIO
-		mtk_wcn_stp_debug_gpio_assert(IDX_GPS_TX, DBG_TIE_HIGH);
-#endif
 
-#if GPS_DEBUG_DUMP
-		{
-			unsigned char *buf_ptr = &o_buf[0];
-			int k = 0;
-
-			pr_warn("--[GPS-WRITE]--");
-			for (k = 0; k < 10; k++) {
-				if (k % 16 == 0)
-					pr_warn("\n");
-				pr_warn("0x%02x ", o_buf[k]);
-			}
-			pr_warn("\n");
-		}
-#endif
 		if (written == 0) {
 			retval = -ENOSPC;
 			/* no windowspace in STP is available, */
@@ -283,7 +262,7 @@ ssize_t GPS_read(struct file *filp, char __user *buf, size_t count, loff_t *f_po
 
 	down(&rd_mtx);
 
-    /* pr_debug("GPS_read(): count %d pos %lld\n", count, *f_pos); */
+    /* no_printk("GPS_read(): count %d pos %lld\n", count, *f_pos); */
 	if (rstflag == 1) {
 		if (filp->f_flags & O_NONBLOCK) {
 			/* GPS_DBG_FUNC("Non-blocking read, whole chip reset occurs! rstflag=%d\n", rstflag); */
@@ -295,13 +274,7 @@ ssize_t GPS_read(struct file *filp, char __user *buf, size_t count, loff_t *f_po
 	if (count > STP_GPS_BUFFER_SIZE)
 		count = STP_GPS_BUFFER_SIZE;
 
-#if GPS_DEBUG_TRACE_GPIO
-	mtk_wcn_stp_debug_gpio_assert(IDX_GPS_RX, DBG_TIE_LOW);
-#endif
 	retval = mtk_wcn_stp_receive_data(i_buf, count, GPS_TASK_INDX);
-#if GPS_DEBUG_TRACE_GPIO
-	mtk_wcn_stp_debug_gpio_assert(IDX_GPS_RX, DBG_TIE_HIGH);
-#endif
 
 	while (retval == 0) {
 		/* got nothing, wait for STP's signal */
@@ -315,15 +288,8 @@ ssize_t GPS_read(struct file *filp, char __user *buf, size_t count, loff_t *f_po
 		val = wait_event_interruptible(GPS_wq, flag != 0);
 		flag = 0;
 
-#if GPS_DEBUG_TRACE_GPIO
-		mtk_wcn_stp_debug_gpio_assert(IDX_GPS_RX, DBG_TIE_LOW);
-#endif
-
 		retval = mtk_wcn_stp_receive_data(i_buf, count, GPS_TASK_INDX);
 
-#if GPS_DEBUG_TRACE_GPIO
-		mtk_wcn_stp_debug_gpio_assert(IDX_GPS_RX, DBG_TIE_HIGH);
-#endif
 		/* if we are signaled */
 		if (val) {
 			if (-ERESTARTSYS == val)
@@ -334,21 +300,6 @@ ssize_t GPS_read(struct file *filp, char __user *buf, size_t count, loff_t *f_po
 			break;
 		}
 	}
-
-#if GPS_DEBUG_DUMP
-	{
-		unsigned char *buf_ptr = &i_buf[0];
-		int k = 0;
-
-		pr_warn("--[GPS-READ]--");
-		for (k = 0; k < 10; k++) {
-			if (k % 16 == 0)
-				pr_warn("\n");
-			pr_warn("0x%02x ", i_buf[k]);
-		}
-		pr_warn("--\n");
-	}
-#endif
 
 	if (retval > 0) {
 		/* we got something from STP driver */
@@ -446,7 +397,7 @@ long GPS_fwctl(struct gps_fwctl_data *user_ptr)
 	if (fwctl_ready && (status == 0) && (rx_len <= GPS_FWCTL_BUF_MAX) && (rx_len >= 2)) {
 		rx0 = rx_buf[0];
 		rx1 = rx_buf[1];
-		pr_info("GPS_fwctl: st=%d, tx_len=%u ([0]=%u), rx_len=%u ([0]=%u, [1]=%u), us=%u",
+		pr_no_info("GPS_fwctl: st=%d, tx_len=%u ([0]=%u), rx_len=%u ([0]=%u, [1]=%u), us=%u",
 			status, ctl_data.tx_len, tx0, rx_len, rx0, rx1, (UINT32)delta_time);
 
 		if (ctl_data.rx_max < rx_len)
@@ -466,7 +417,7 @@ long GPS_fwctl(struct gps_fwctl_data *user_ptr)
 		return retval;
 	}
 
-	pr_info("GPS_fwctl: st=%d, tx_len=%u ([0]=%u), rx_len=%u, us=%u, ready=%u",
+	pr_no_info("GPS_fwctl: st=%d, tx_len=%u ([0]=%u), rx_len=%u, us=%u, ready=%u",
 		status, ctl_data.tx_len, tx0, rx_len, (UINT32)delta_time, (UINT32)fwctl_ready);
 	return -EFAULT;
 }
@@ -533,7 +484,7 @@ void GPS_fwlog_ctrl_inner(bool on)
 		}
 	}
 
-	pr_info("GPS_fwlog: st=%d, rx_len=%u ([0]=%u, [1]=%u), ms0=%u, ms1=%u, fw_tick=%u",
+	pr_no_info("GPS_fwlog: st=%d, rx_len=%u ([0]=%u, [1]=%u), ms0=%u, ms1=%u, fw_tick=%u",
 		status, rx_len, rx0, rx1, local_ms0, local_ms1, fw_tick);
 }
 
@@ -1092,7 +1043,7 @@ const struct file_operations GPS_fops = {
 
 void GPS_event_cb(void)
 {
-/*    pr_debug("GPS_event_cb()\n");*/
+/*    no_printk("GPS_event_cb()\n");*/
 
 	flag = 1;
 	wake_up(&GPS_wq);
@@ -1137,7 +1088,7 @@ static int GPS_init(void)
 
 	gps_wake_lock_ptr = wakeup_source_register("gpswakelock");
 	if (!gps_wake_lock_ptr) {
-		pr_info("%s %d: init wakeup source fail!", __func__, __LINE__);
+		pr_no_info("%s %d: init wakeup source fail!", __func__, __LINE__);
 		goto error;
 	}
 

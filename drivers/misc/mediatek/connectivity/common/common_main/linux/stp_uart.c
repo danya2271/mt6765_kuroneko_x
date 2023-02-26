@@ -104,7 +104,7 @@ UINT8 tx_buf[MTKSTP_BUFFER_SIZE] = { 0x0 };
 INT32 rd_idx;
 INT32 wr_idx;
 /* struct semaphore buf_mtx; */
-spinlock_t buf_lock;
+spinlock_t buf_lock_uart;
 static INT32 mtk_wcn_uart_tx(const PUINT8 data, const UINT32 size, PUINT32 written_size);
 
 
@@ -117,7 +117,7 @@ static _osal_inline_ INT32 stp_uart_tx_wakeup(struct tty_struct *tty)
 	/* UINT32 flags; */
 	/* get data from ring buffer */
 /* down(&buf_mtx); */
-/* //    spin_lock_irqsave(&buf_lock, flags); */
+/* //    spin_lock_irqsave(&buf_lock_uart, flags); */
 
 #if 0
 	if ((i > 1000) && (i % 5) == 0) {
@@ -146,7 +146,7 @@ static _osal_inline_ INT32 stp_uart_tx_wakeup(struct tty_struct *tty)
 			return -1;
 		}
 		written_count = written;
-		/* pr_debug("len = %d, written = %d\n", len, written); */
+		/* no_printk("len = %d, written = %d\n", len, written); */
 		rd_idx = ((rd_idx + written) % MTKSTP_BUFFER_SIZE);
 		/* all data is accepted by UART driver, check again in case roll over */
 		len = (wr_idx >= rd_idx) ? (wr_idx - rd_idx) : (MTKSTP_BUFFER_SIZE - rd_idx);
@@ -173,7 +173,7 @@ static _osal_inline_ INT32 stp_uart_tx_wakeup(struct tty_struct *tty)
 		return -1;
 	}
 	/* up(&buf_mtx); */
-/* //    spin_unlock_irqrestore(&buf_lock, flags); */
+/* //    spin_unlock_irqrestore(&buf_lock_uart, flags); */
 	return written_count;
 }
 
@@ -206,7 +206,7 @@ static INT32 stp_uart_tty_open(struct tty_struct *tty)
 	tty_driver_flush_buffer(tty);
 
 /* init_MUTEX(&buf_mtx); */
-/* //    spin_lock_init(&buf_lock); */
+/* //    spin_lock_init(&buf_lock_uart); */
 
 	rd_idx = wr_idx = 0;
 	stp_tty = tty;
@@ -236,7 +236,7 @@ static VOID stp_uart_tty_close(struct tty_struct *tty)
  */
 static VOID stp_uart_tty_wakeup(struct tty_struct *tty)
 {
-	/* pr_debug("%s: start !!\n", __FUNCTION__); */
+	/* no_printk("%s: start !!\n", __FUNCTION__); */
 
 	/* clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags); */
 
@@ -454,7 +454,7 @@ static VOID stp_uart_rx_worker(struct work_struct *work)
 	/* run until fifo becomes empty */
 	while (!kfifo_is_empty(g_stp_uart_rx_fifo)) {
 		read = kfifo_out(g_stp_uart_rx_fifo, g_stp_uart_rx_buf, LDISC_RX_BUF_SIZE);
-		/* pr_debug("rx_work:%d\n\r",read); */
+		/* no_printk("rx_work:%d\n\r",read); */
 		if (likely(read)) {
 			/* UART_LOUD_FUNC("->%d\n", read); */
 			mtk_wcn_stp_parser_data((UINT8 *) g_stp_uart_rx_buf, read);
@@ -495,7 +495,7 @@ static VOID stp_uart_tty_receive(struct tty_struct *tty, const PUINT8 data, PINT
 	/* need to lock fifo? skip for single writer single reader! */
 
 	written = kfifo_in(g_stp_uart_rx_fifo, (PUINT8) data, count);
-	/* pr_debug("uart_rx:%d,wr:%d\n\r",count,written); */
+	/* no_printk("uart_rx:%d,wr:%d\n\r",count,written); */
 
 	queue_work(g_stp_uart_rx_wq, g_stp_uart_rx_work);
 
@@ -619,7 +619,7 @@ INT32 mtk_wcn_uart_tx(const PUINT8 data, const UINT32 size, PUINT32 written_size
 	 * [PatchNeed]
 	 * spin_lock_irqsave is redundant
 	 */
-	/* spin_lock_irqsave(&buf_lock, flags); */
+	/* spin_lock_irqsave(&buf_lock_uart, flags); */
 
 	room =
 	    (wr_idx >=
@@ -685,7 +685,7 @@ INT32 mtk_wcn_uart_tx(const PUINT8 data, const UINT32 size, PUINT32 written_size
 	 * [PatchNeed]
 	 * spin_lock_irqsave is redundant
 	 */
-	/* spin_lock_irqsave(&buf_lock, flags); */
+	/* spin_lock_irqsave(&buf_lock_uart, flags); */
 
 	/*[PatchNeed]To add a tasklet to shedule Uart Tx */
 

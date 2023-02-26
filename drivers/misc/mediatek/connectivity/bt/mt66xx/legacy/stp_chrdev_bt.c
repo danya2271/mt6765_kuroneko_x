@@ -488,18 +488,13 @@ long BT_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 static int BT_open(struct inode *inode, struct file *file)
 {
 	if(btonflag) {
-		BT_LOG_PRT_WARN("BT already on!\n");
 		return -EIO;
 	}
-	BT_LOG_PRT_INFO("major %d minor %d (pid %d)\n", imajor(inode), iminor(inode), current->pid);
-
 	/* Turn on BT */
 	if (mtk_wcn_wmt_func_on(WMTDRV_TYPE_BT) == MTK_WCN_BOOL_FALSE) {
 		BT_LOG_PRT_WARN("WMT turn on BT fail!\n");
 		return -EIO;
 	}
-
-	BT_LOG_PRT_INFO("WMT turn on BT OK!\n");
 
 	if (mtk_wcn_stp_is_ready() == MTK_WCN_BOOL_FALSE) {
 
@@ -510,17 +505,12 @@ static int BT_open(struct inode *inode, struct file *file)
 
 	mtk_wcn_stp_set_bluez(0);
 
-	BT_LOG_PRT_INFO("Now it's in MTK Bluetooth Mode\n");
-	BT_LOG_PRT_INFO("STP is ready!\n");
-
-	BT_LOG_PRT_DBG("Register BT event callback!\n");
 	mtk_wcn_stp_register_event_cb(BT_TASK_INDX, BT_event_cb);
 
-	BT_LOG_PRT_DBG("Register BT reset callback!\n");
 	mtk_wcn_wmt_msgcb_reg(WMTDRV_TYPE_BT, bt_cdev_rst_cb);
 
 	rstflag = 0;
-	bt_ftrace_flag = 1;
+	bt_ftrace_flag = 0;
 	btonflag = 1;
 
 	sema_init(&wr_mtx, 1);

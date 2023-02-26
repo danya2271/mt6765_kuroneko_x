@@ -1081,21 +1081,21 @@ static _osal_inline_ VOID stp_dbg_dump_data(PUINT8 pBuf, PINT8 title, INT32 len)
 	PUINT8 p_str;
 
 	p_str = &str[0];
-	pr_debug(" %s-len:%d\n", title, len);
+	no_printk(" %s-len:%d\n", title, len);
 	for (idx = 0; idx < len; idx++, pBuf++) {
 		sprintf(p_str, "%02x ", *pBuf);
 		p_str += 3;
 		if (15 == (idx % 16)) {
 			sprintf(p_str, "--end\n");
 			*(p_str + 6) = '\0';
-			pr_debug("%s", str);
+			no_printk("%s", str);
 			p_str = 0;
 		}
 	}
 	if (len % 16) {
 		sprintf(p_str, "--end\n");
 		*(p_str + 6) = '\0';
-		pr_debug("%s", str);
+		no_printk("%s", str);
 	}
 }
 #endif
@@ -1173,7 +1173,7 @@ static _osal_inline_ INT32 stp_dbg_dmp_in(MTKSTP_DBG_T *stp_dbg, PINT8 buf, INT3
 		pBuf = (PINT8)&(stp_dbg->logsys->queue[stp_dbg->logsys->in].buffer[0]) +
 			sizeof(STP_DBG_HDR_T);
 		length = stp_dbg->logsys->queue[stp_dbg->logsys->in].len - sizeof(STP_DBG_HDR_T);
-		pr_info("STP-DBG:%d.%ds, %s:pT%sn(%d)l(%d)s(%d)a(%d)\n",
+		pr_no_info("STP-DBG:%d.%ds, %s:pT%sn(%d)l(%d)s(%d)a(%d)\n",
 			pHdr->sec,
 			pHdr->usec,
 			pHdr->dir == PKT_DIR_TX ? "Tx" : "Rx",
@@ -1225,7 +1225,7 @@ static VOID stp_dbg_dmp_print_work(struct work_struct *work)
 		pBuf = &(queue[i].buffer[0]) + sizeof(STP_DBG_HDR_T);
 		len = queue[i].len - sizeof(STP_DBG_HDR_T);
 		len = len > STP_PKT_SZ ? STP_PKT_SZ : len;
-		pr_info("STP-DBG:%d.%ds, %s:pT%sn(%d)l(%d)s(%d)a(%d), time[%llu.%06lu]\n",
+		pr_no_info("STP-DBG:%d.%ds, %s:pT%sn(%d)l(%d)s(%d)a(%d), time[%llu.%06lu]\n",
 			pHdr->sec,
 			pHdr->usec,
 			pHdr->dir == PKT_DIR_TX ? "Tx" : "Rx",
@@ -1263,14 +1263,14 @@ INT32 stp_dbg_dmp_print(MTKSTP_DBG_T *stp_dbg)
 	dump_queue = vmalloc(sizeof(MTKSTP_LOG_ENTRY_T) * MAX_DMP_NUM);
 	if (dump_queue == NULL) {
 		stp_dbg->logsys->dump_queue = NULL;
-		pr_info("fail to allocate memory");
+		pr_no_info("fail to allocate memory");
 		return -1;
 	}
 
 	if (spin_trylock_irqsave(&(stp_dbg->logsys->lock), flags) == 0) {
 		stp_dbg->logsys->dump_queue = NULL;
 		vfree(dump_queue);
-		pr_info("fail to get lock");
+		pr_no_info("fail to get lock");
 		return -1;
 	}
 	/* Not to dequeue from loging system */

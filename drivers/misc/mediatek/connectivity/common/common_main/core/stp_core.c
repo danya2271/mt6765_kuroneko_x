@@ -221,7 +221,7 @@ static INT32 stp_ctx_lock_deinit(mtkstp_context_struct *pctx)
 static INT32 stp_ctx_lock(mtkstp_context_struct *pctx)
 {
 	/* dump_stack(); */
-	/* pr_debug("stp_lock\n\r"); */
+	/* no_printk("stp_lock\n\r"); */
 #if CFG_STP_CORE_CTX_SPIN_LOCK
 	return osal_lock_unsleepable_lock(&((pctx)->stp_mutex));
 #else
@@ -232,7 +232,7 @@ static INT32 stp_ctx_lock(mtkstp_context_struct *pctx)
 static INT32 stp_ctx_unlock(mtkstp_context_struct *pctx)
 {
 	/* dump_stack(); */
-	/* pr_debug("stp_unlock\n\r"); */
+	/* no_printk("stp_unlock\n\r"); */
 
 #if CFG_STP_CORE_CTX_SPIN_LOCK
 	return osal_unlock_unsleepable_lock(&((pctx)->stp_mutex));
@@ -1521,18 +1521,18 @@ INT32 mtk_wcn_stp_init(const mtkstp_callback * const cb_func)
 
 	STP_SET_BT_STK(stp_core_ctx, 0);
 	STP_SET_ENABLE(stp_core_ctx, 0);
-	STP_SET_ENABLE_DBG(stp_core_ctx, 0);
+//	STP_SET_ENABLE_DBG(stp_core_ctx, 0);
 	STP_SET_ENABLE_RST(stp_core_ctx, 0);
 	STP_SET_PENDING_TYPE(stp_core_ctx, 0);
 	STP_SET_READY(stp_core_ctx, 0);
 	STP_SET_SUPPORT_PROTOCOL(stp_core_ctx, 0);
 	STP_SET_PSM_CORE(stp_core_ctx, stp_psm_init());
-	STP_SET_FW_COREDUMP_FLAG(stp_core_ctx, 0);
-	STP_ENABLE_FW_COREDUMP(stp_core_ctx, 0);
+//	STP_SET_FW_COREDUMP_FLAG(stp_core_ctx, 0);
+//	STP_ENABLE_FW_COREDUMP(stp_core_ctx, 0);
 	STP_SET_WMT_LAST_CLOSE(stp_core_ctx, 0);
-	STP_SET_EMI_DUMP_FLAG(stp_core_ctx, 0);
-	STP_SET_ASSERT(stp_core_ctx, 0);
-	STP_SET_ASSERT_IN_PROGRESS(stp_core_ctx, 0);
+//	STP_SET_EMI_DUMP_FLAG(stp_core_ctx, 0);
+//  STP_SET_ASSERT(stp_core_ctx, 0);
+//	STP_SET_ASSERT_IN_PROGRESS(stp_core_ctx, 0);
 
 	if (!STP_PSM_CORE(stp_core_ctx)) {
 		ret = (-3);

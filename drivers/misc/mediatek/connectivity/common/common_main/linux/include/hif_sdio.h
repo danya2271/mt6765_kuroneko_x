@@ -48,7 +48,6 @@
 #include <linux/mmc/sdio_func.h>
 #include <linux/mmc/sdio_ids.h>
 #include <linux/mmc/sdio.h>
-#include <sdio_ops.h>
 
 #include <linux/mm.h>
 #include <linux/firmware.h>

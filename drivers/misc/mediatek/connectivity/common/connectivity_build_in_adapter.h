@@ -142,20 +142,6 @@ int connectivity_export_pmic_ldo_vcn33_2_lp(int user,
 #endif
 
 /*******************************************************************************
- * MMC
- * Caller please be sure to #include:
- *	<linux/mmc/host.h>
- *	<linux/mmc/card.h>
- *	drivers/mmc/core/sdio_ops.h
- ******************************************************************************/
-#define KERNEL_mmc_io_rw_direct connectivity_export_mmc_io_rw_direct
-struct mmc_card;
-int connectivity_export_mmc_io_rw_direct(struct mmc_card *card, int write,
-						unsigned int fn,
-						unsigned int addr,
-						u8 in, u8 *out);
-
-/*******************************************************************************
  * MT6306 I2C-based GPIO Expander
  ******************************************************************************/
 #ifdef CONFIG_MTK_MT6306_GPIO_SUPPORT
