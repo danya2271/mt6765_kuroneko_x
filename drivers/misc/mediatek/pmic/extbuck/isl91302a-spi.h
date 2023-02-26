@@ -69,19 +69,19 @@ struct isl91302a_chip {
 static inline int isl91302a_read_byte(void *client, uint32_t addr,
 				      uint32_t *val)
 {
-	pr_notice("%s not support in sspm\n", __func__);
+	pr_no_notice("%s not support in sspm\n", __func__);
 	return -EINVAL;
 }
 static inline int isl91302a_write_byte(void *client, uint32_t addr,
 				       uint32_t value)
 {
-	pr_notice("%s not support in sspm\n", __func__);
+	pr_no_notice("%s not support in sspm\n", __func__);
 	return -EINVAL;
 }
 static inline int isl91302a_assign_bit(void *client, uint32_t reg,
 					uint32_t mask, uint32_t data)
 {
-	pr_notice("%s not support in sspm\n", __func__);
+	pr_no_notice("%s not support in sspm\n", __func__);
 	return -EINVAL;
 }
 #else
@@ -99,7 +99,7 @@ extern int isl91302a_regulator_deinit(struct isl91302a_chip *chip);
 #define isl91302a_clr_bit(spi, reg, mask) \
 	isl91302a_assign_bit(spi, reg, mask, 0x00)
 
-#define ISL91302A_INFO(format, args...) pr_info(format, ##args)
-#define ISL91302A_pr_notice(format, args...)	pr_notice(format, ##args)
+#define ISL91302A_INFO(format, args...) pr_no_info(format, ##args)
+#define ISL91302A_pr_no_notice(format, args...)	pr_no_notice(format, ##args)
 
 #endif /* __LINUX_ISL91302A_SPI_H */

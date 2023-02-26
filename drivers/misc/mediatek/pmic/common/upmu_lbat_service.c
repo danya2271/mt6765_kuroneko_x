@@ -220,13 +220,13 @@ static void lbat_timer_func(unsigned long data)
 		deb_prd = user->lv_deb_prd;
 		deb_times = user->lv_deb_times;
 	} else {
-		pr_notice("[%s] LBAT de-bounce threshold not match\n",
+		pr_no_notice("[%s] LBAT de-bounce threshold not match\n",
 			__func__);
 		return;
 	}
 	user->deb_cnt++;
 #if LBAT_SERVICE_DBG
-	pr_info("[%s] name:%s, thd_volt:%d, de-bounce times:%d\n",
+	pr_no_info("[%s] name:%s, thd_volt:%d, de-bounce times:%d\n",
 		__func__, user->name,
 		user->deb_thd_ptr->thd_volt, user->deb_cnt);
 #endif
@@ -313,11 +313,11 @@ int lbat_user_register(struct lbat_user *user, const char *name,
 	user->callback = callback;
 	lbat_user_init_timer(user);
 	INIT_WORK(&user->deb_work, lbat_deb_handler);
-	pr_info("[%s] hv=%d, lv1=%d, lv2=%d\n",
+	pr_no_info("[%s] hv=%d, lv1=%d, lv2=%d\n",
 		__func__, hv_thd_volt, lv1_thd_volt, lv2_thd_volt);
 	ret = lbat_user_update(user);
 	if (ret)
-		pr_notice("[%s] error ret=%d\n", __func__, ret);
+		pr_no_notice("[%s] error ret=%d\n", __func__, ret);
 out:
 	mutex_unlock(&lbat_mutex);
 	return ret;
@@ -347,7 +347,7 @@ static void bat_h_int_handler(void)
 		return;
 	}
 	mutex_lock(&lbat_mutex);
-	pr_info("[%s] cur_thd_volt=%d\n", __func__, cur_hv_ptr->thd_volt);
+	pr_no_info("[%s] cur_thd_volt=%d\n", __func__, cur_hv_ptr->thd_volt);
 
 	user = cur_hv_ptr->user;
 	list_del_init(&cur_hv_ptr->list);
@@ -386,7 +386,7 @@ static void bat_l_int_handler(void)
 		return;
 	}
 	mutex_lock(&lbat_mutex);
-	pr_info("[%s] cur_thd_volt=%d\n", __func__, cur_lv_ptr->thd_volt);
+	pr_no_info("[%s] cur_thd_volt=%d\n", __func__, cur_lv_ptr->thd_volt);
 
 	user = cur_lv_ptr->user;
 	list_del_init(&cur_lv_ptr->list);
@@ -430,7 +430,7 @@ int lbat_service_init(void)
 {
 	int ret = 0;
 
-	pr_info("[%s]", __func__);
+	pr_no_info("[%s]", __func__);
 #if defined(CONFIG_MTK_PMIC_CHIP_MT6359)
 	/* Selects debounce as 8 */
 	pmic_set_register_value(PMIC_AUXADC_LBAT_DEBT_MAX, 3);
@@ -477,17 +477,17 @@ unsigned int lbat_read_volt(void)
  */
 void lbat_dump_reg(void)
 {
-	pr_notice("AUXADC_LBAT_VOLT_MAX = 0x%x, AUXADC_LBAT_VOLT_MIN = 0x%x, RG_INT_EN_BAT_H = %d, RG_INT_EN_BAT_L = %d\n"
+	pr_no_notice("AUXADC_LBAT_VOLT_MAX = 0x%x, AUXADC_LBAT_VOLT_MIN = 0x%x, RG_INT_EN_BAT_H = %d, RG_INT_EN_BAT_L = %d\n"
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_VOLT_MAX)
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_VOLT_MIN)
 		, pmic_get_register_value(PMIC_RG_INT_EN_BAT_H)
 		, pmic_get_register_value(PMIC_RG_INT_EN_BAT_L));
-	pr_notice("AUXADC_LBAT_EN_MAX = %d, AUXADC_LBAT_IRQ_EN_MAX = %d, AUXADC_LBAT_EN_MIN = %d, AUXADC_LBAT_IRQ_EN_MIN = %d\n"
+	pr_no_notice("AUXADC_LBAT_EN_MAX = %d, AUXADC_LBAT_IRQ_EN_MAX = %d, AUXADC_LBAT_EN_MIN = %d, AUXADC_LBAT_IRQ_EN_MIN = %d\n"
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_EN_MAX)
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_IRQ_EN_MAX)
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_EN_MIN)
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_IRQ_EN_MIN));
-	pr_notice("AUXADC_LBAT_DEBT_MAX=%d, AUXADC_LBAT_DEBT_MIN=%d\n"
+	pr_no_notice("AUXADC_LBAT_DEBT_MAX=%d, AUXADC_LBAT_DEBT_MIN=%d\n"
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_DEBT_MAX)
 		, pmic_get_register_value(PMIC_AUXADC_LBAT_DEBT_MIN));
 }
@@ -499,7 +499,7 @@ static void lbat_dump_thd_list(struct seq_file *s)
 	struct lbat_thd_t *thd = NULL;
 
 	if (list_empty(&lbat_hv_list) && list_empty(&lbat_lv_list)) {
-		pr_notice("[%s] no entry in lbat list\n", __func__);
+		pr_no_notice("[%s] no entry in lbat list\n", __func__);
 		seq_puts(s, "no entry in lbat list\n");
 		return;
 	}
@@ -510,12 +510,12 @@ static void lbat_dump_thd_list(struct seq_file *s)
 			(thd == cur_hv_ptr ||
 			 thd == cur_lv_ptr) ? "->" : "  ",
 			thd->thd_volt, thd->user->name);
-		pr_notice("%s", str);
+		pr_no_notice("%s", str);
 		seq_printf(s, "%s", str);
 		strncpy(str, "", strlen(str));
 		len = 0;
 	}
-	pr_notice("\n");
+	pr_no_notice("\n");
 	seq_puts(s, "\n");
 
 	list_for_each_entry(thd, &lbat_lv_list, list) {
@@ -524,12 +524,12 @@ static void lbat_dump_thd_list(struct seq_file *s)
 			(thd == cur_hv_ptr ||
 			 thd == cur_lv_ptr) ? "->" : "  ",
 			thd->thd_volt, thd->user->name);
-		pr_notice("%s", str);
+		pr_no_notice("%s", str);
 		seq_printf(s, "%s", str);
 		strncpy(str, "", strlen(str));
 		len = 0;
 	}
-	pr_notice("\n");
+	pr_no_notice("\n");
 	mutex_unlock(&lbat_mutex);
 }
 
@@ -648,12 +648,12 @@ int lbat_debug_init(struct dentry *debug_dir)
 	struct dentry *lbat_dbg_dir;
 
 	if (IS_ERR(debug_dir) || !debug_dir) {
-		pr_notice("dir mtk_pmic does not exist\n");
+		pr_no_notice("dir mtk_pmic does not exist\n");
 		return -1;
 	}
 	lbat_dbg_dir = debugfs_create_dir("lbat_dbg", debug_dir);
 	if (IS_ERR(lbat_dbg_dir) || !lbat_dbg_dir) {
-		pr_notice("fail mkdir /sys/kernel/debug/mtk_pmic/lbat_dbg\n");
+		pr_no_notice("fail mkdir /sys/kernel/debug/mtk_pmic/lbat_dbg\n");
 		return -1;
 	}
 	/* lbat service debug init */

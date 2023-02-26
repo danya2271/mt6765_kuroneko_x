@@ -44,13 +44,13 @@ int is_rt5738_exist(void)
 	struct regulator *reg;
 
 	reg = regulator_get(NULL, RT5738_IS_EXIST_NAME);
-	pr_info("%s: regulator_get=%s\n", __func__, RT5738_IS_EXIST_NAME);
+	pr_no_info("%s: regulator_get=%s\n", __func__, RT5738_IS_EXIST_NAME);
 	if (reg == NULL)
 		return 0;
 	regulator_put(reg);
 	return 1;
 #else
-	pr_notice("g_is_rt5738_exist=%d\n", g_is_rt5738_exist);
+	pr_no_notice("g_is_rt5738_exist=%d\n", g_is_rt5738_exist);
 	return g_is_rt5738_exist;
 #endif
 }
@@ -108,7 +108,7 @@ int rt5738_read_byte(void *client,
 
 	ret = rt5738_read_device(i2c, addr, 1, val);
 	if (ret < 0)
-		pr_notice("%s read 0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s read 0x%02x fail\n", __func__, addr);
 	return ret;
 }
 
@@ -120,7 +120,7 @@ int rt5738_write_byte(void *client,
 
 	ret = rt5738_write_device(i2c, addr, 1, &value);
 	if (ret < 0)
-		pr_notice("%s write 0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s write 0x%02x fail\n", __func__, addr);
 	return ret;
 }
 
@@ -136,7 +136,7 @@ int rt5738_assign_bit(void *client, uint32_t reg,
 	mutex_lock(&ri->io_lock);
 	ret = rt5738_read_byte(i2c, reg, &regval);
 	if (ret < 0) {
-		pr_notice("%s read fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s read fail reg0x%02x data0x%02x\n",
 				__func__, reg, data);
 		goto OUT_ASSIGN;
 	}
@@ -145,7 +145,7 @@ int rt5738_assign_bit(void *client, uint32_t reg,
 	tmp |= (data & mask);
 	ret = rt5738_write_byte(i2c, reg, tmp);
 	if (ret < 0)
-		pr_notice("%s write fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s write fail reg0x%02x data0x%02x\n",
 				__func__, reg, tmp);
 OUT_ASSIGN:
 	mutex_unlock(&ri->io_lock);
@@ -228,7 +228,7 @@ static int rt5738_get_voltage(struct regulator_dev *rdev)
 
 	ret = rt5738_read_byte(info->i2c, chip->vol_reg, &reg_val);
 	if (ret < 0) {
-		pr_notice("%s read voltage fail\n", __func__);
+		pr_no_notice("%s read voltage fail\n", __func__);
 		return ret;
 	}
 
@@ -265,7 +265,7 @@ static unsigned int rt5738_get_mode(struct regulator_dev *rdev)
 
 	ret = rt5738_read_byte(info->i2c, chip->mode_reg, &regval);
 	if (ret < 0) {
-		pr_notice("%s read mode fail\n", __func__);
+		pr_no_notice("%s read mode fail\n", __func__);
 		return ret;
 	}
 
@@ -288,7 +288,7 @@ static int rt5738_disable(struct regulator_dev *rdev)
 	struct regulator_chip *chip = info->reg_chip;
 
 	if (rdev->use_count == 0) {
-		pr_info("ext_buck should not be disable (use_count=%d)\n"
+		pr_no_info("ext_buck should not be disable (use_count=%d)\n"
 			, rdev->use_count);
 		return -1;
 	}
@@ -344,18 +344,18 @@ static int rt5738_parse_dt(
 	int ret;
 
 	if (!np) {
-		pr_notice("%s cant find node (0x%02x)\n",
+		pr_no_notice("%s cant find node (0x%02x)\n",
 				__func__, info->i2c->addr);
 		return 0;
 	}
 
 	ret = of_property_read_u32(np, "vsel_pin", &val);
 	if (ret >= 0) {
-		pr_info("%s set vsel_pin(%x)\n", __func__, val);
+		pr_no_info("%s set vsel_pin(%x)\n", __func__, val);
 		info->pin_sel = val;
 		info->id = val;
 	} else {
-		pr_notice("%s use chip default vsel_pin(0)\n", __func__);
+		pr_no_notice("%s use chip default vsel_pin(0)\n", __func__);
 		info->pin_sel = 0;
 		info->id = 0;
 	}
@@ -384,7 +384,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 	struct regulator_init_data *init_data = NULL;
 	int ret;
 
-	pr_info("%s ver(%s) slv(0x%02x)\n",
+	pr_no_info("%s ver(%s) slv(0x%02x)\n",
 		__func__, RT5738_DRV_VERSION, i2c->addr);
 
 	switch (i2c->addr) {
@@ -398,7 +398,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 	case 0x55: /* RT5738_F */
 		return -ENODEV;
 	default:
-		pr_notice("%s invalid Slave Addr\n", __func__);
+		pr_no_notice("%s invalid Slave Addr\n", __func__);
 		return -ENODEV;
 	}
 
@@ -409,7 +409,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 
 	ret = rt5738_parse_dt(info, &i2c->dev);
 	if (ret < 0) {
-		pr_notice("%s parse dt (0x%02x) fail\n", __func__, i2c->addr);
+		pr_no_notice("%s parse dt (0x%02x) fail\n", __func__, i2c->addr);
 		return -EINVAL;
 	}
 
@@ -422,7 +422,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 			 , init_data->constraints.name
 			 , init_data->constraints.min_uV
 			 , init_data->constraints.max_uV);
-		pr_info("rt5738 regulator_name = %s, min_uV =%d, max_uV = %d\n"
+		pr_no_info("rt5738 regulator_name = %s, min_uV =%d, max_uV = %d\n"
 			 , init_data->constraints.name
 			 , init_data->constraints.min_uV
 			 , init_data->constraints.max_uV);
@@ -441,7 +441,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 
 	ret = rt5738_regmap_init(info);
 	if (ret < 0) {
-		pr_notice("%s rt5738 regmap init fail\n", __func__);
+		pr_no_notice("%s rt5738 regmap init fail\n", __func__);
 		return -EINVAL;
 	}
 
@@ -449,7 +449,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 	g_is_rt5738_exist = 0;
 	if (rt5738_read_byte(info->i2c, RT5738_REG_MONITOR, &ret) >= 0)
 		g_is_rt5738_exist = 1;
-	pr_notice("i2c_addr=%d ret=%d g_is_rt5738_exist=%d\n"
+	pr_no_notice("i2c_addr=%d ret=%d g_is_rt5738_exist=%d\n"
 				, i2c->addr
 				, ret
 				, g_is_rt5738_exist);
@@ -461,7 +461,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 						    info);
 
 	if (!info->regulator) {
-		pr_notice("%s rt5738 register regulator fail\n", __func__);
+		pr_no_notice("%s rt5738 register regulator fail\n", __func__);
 		return -EINVAL;
 	}
 
@@ -470,7 +470,7 @@ static int rt5738_i2c_probe(struct i2c_client *i2c,
 	info->regulator->constraints->valid_ops_mask |=
 			REGULATOR_CHANGE_MODE;
 
-	pr_info("%s Successfully\n", __func__);
+	pr_no_info("%s Successfully\n", __func__);
 
 	return 0;
 #endif
@@ -518,7 +518,7 @@ static struct i2c_driver rt5738_i2c_driver = {
 
 static int __init rt5738_i2c_init(void)
 {
-	pr_info("%s\n", __func__);
+	pr_no_info("%s\n", __func__);
 	return i2c_add_driver(&rt5738_i2c_driver);
 }
 subsys_initcall(rt5738_i2c_init);

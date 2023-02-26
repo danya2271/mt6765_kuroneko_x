@@ -39,7 +39,7 @@ static int rt5734_read_device(void *client, u32 addr, int len, void *dst)
 {
 	int ret;
 #ifdef CONIFG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct spi_device *spi = (struct spi_device *)client;
@@ -49,7 +49,7 @@ static int rt5734_read_device(void *client, u32 addr, int len, void *dst)
 	u32 rx_buf;
 
 	if (len != 1) {
-		pr_notice("%s not support multi read now\n", __func__);
+		pr_no_notice("%s not support multi read now\n", __func__);
 		return -EINVAL;
 	}
 
@@ -71,9 +71,9 @@ static int rt5734_read_device(void *client, u32 addr, int len, void *dst)
 
 	*(unsigned char *)dst = (rx_buf & 0xff000000) >> 24;
 #if 0
-	pr_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, *val);
-	pr_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
-	pr_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
+	pr_no_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, *val);
+	pr_no_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
+	pr_no_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
 #endif
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 	return ret;
@@ -84,7 +84,7 @@ int rt5734_write_device(void *client,
 {
 	int ret;
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support sspm\n", __func__);
+	pr_no_notice("%s not support sspm\n", __func__);
 	return 0;
 #else
 	struct spi_device *spi = (struct spi_device *)client;
@@ -95,7 +95,7 @@ int rt5734_write_device(void *client,
 	u32 rx_buf;
 
 	if (len != 1) {
-		pr_notice("%s not support multi write now\n", __func__);
+		pr_no_notice("%s not support multi write now\n", __func__);
 		return -EINVAL;
 	}
 
@@ -116,9 +116,9 @@ int rt5734_write_device(void *client,
 		return ret;
 
 #if 0
-	pr_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, value);
-	pr_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
-	pr_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
+	pr_no_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, value);
+	pr_no_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
+	pr_no_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
 #endif
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 	return ret;
@@ -177,7 +177,7 @@ int rt5734_read_byte(void *client, uint32_t addr, uint32_t *value)
 {
 	int ret;
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	ret = 0;
 #else
 	struct spi_device *spi = (struct spi_device *)client;
@@ -189,7 +189,7 @@ int rt5734_read_byte(void *client, uint32_t addr, uint32_t *value)
 	ret = rt5734_read_device(chip->spi, addr, 1, value);
 #endif /* CONFIG_RT_REGMAP */
 	if (ret < 0)
-		pr_notice("%s read addr0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s read addr0x%02x fail\n", __func__, addr);
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 	return ret;
 }
@@ -199,7 +199,7 @@ int rt5734_write_byte(void *client, uint32_t addr, uint32_t data)
 {
 	int ret = 0;
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	ret = 0;
 #else
 	struct spi_device *spi = (struct spi_device *)client;
@@ -211,7 +211,7 @@ int rt5734_write_byte(void *client, uint32_t addr, uint32_t data)
 	ret =  rt5734_write_device(chip->spi, addr, 1, &data);
 #endif /* CONFIG_RT_REGMAP */
 	if (ret < 0)
-		pr_notice("%s write addr0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s write addr0x%02x fail\n", __func__, addr);
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 	return ret;
 }
@@ -221,7 +221,7 @@ int rt5734_assign_bit(void *client,
 {
 	int ret = 0;
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct spi_device *spi = (struct spi_device *)client;
@@ -232,7 +232,7 @@ int rt5734_assign_bit(void *client,
 	mutex_lock(&ri->io_lock);
 	ret = rt5734_read_byte(spi, reg, &regval);
 	if (ret < 0) {
-		pr_notice("%s fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s fail reg0x%02x data0x%02x\n",
 				__func__, reg, data);
 		goto OUT_ASSIGN;
 	}
@@ -240,7 +240,7 @@ int rt5734_assign_bit(void *client,
 	tmp |= (data & mask);
 	ret = rt5734_write_byte(spi, reg, tmp);
 	if (ret < 0)
-		pr_notice("%s fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s fail reg0x%02x data0x%02x\n",
 				__func__, reg, tmp);
 OUT_ASSIGN:
 	mutex_unlock(&ri->io_lock);
@@ -287,7 +287,7 @@ static struct mt_chip_conf rt5734_spi_config = {
 
 static void rt5734_spi_init(struct spi_device *spi)
 {
-	pr_info("%s inited\n", __func__);
+	pr_no_info("%s inited\n", __func__);
 	spi->bits_per_word = 32;
 	spi->controller_data = &rt5734_spi_config;
 	mdelay(100);
@@ -305,12 +305,12 @@ static int rt5734_check_id(struct spi_device *spi)
 
 	ret = rt5734_read_device(spi, RT5734_CHIPNAME_R, 1, &data);
 	if (ret < 0) {
-		pr_notice("%s IO fail\n", __func__);
+		pr_no_notice("%s IO fail\n", __func__);
 		return -EIO;
 	}
 
 	if (data != RT5734_CHIPNAME) {
-		pr_notice("%s ID(0x%02x) not match\n", __func__, data);
+		pr_no_notice("%s ID(0x%02x) not match\n", __func__, data);
 		return -EINVAL;
 	}
 	return 0;
@@ -331,10 +331,10 @@ static void rt5734_irq_evt_handler(void *info, int eventno)
 	dev_info(chip->dev, "%s eventno = %d\n", __func__, eventno);
 	switch (eventno) {
 	case RT5734_EVT_OT_SHUTDOWN_RISING:
-		pr_notice("%s Enter OT Shutdown\n", __func__);
+		pr_no_notice("%s Enter OT Shutdown\n", __func__);
 		break;
 	case RT5734_EVT_OT_SHUTDOWN_FALLING:
-		pr_notice("%s Exit OT Shutdown\n", __func__);
+		pr_no_notice("%s Exit OT Shutdown\n", __func__);
 		break;
 	}
 }
@@ -355,11 +355,11 @@ static irqreturn_t rt5734_irq_handler(int irqno, void *param)
 	ret = rt5734_read_byte(chip->spi,
 			RT5734_FLT_RECORDTEMP_R, &regval);
 	if (ret < 0) {
-		pr_notice("%s get irq regval fail\n", __func__);
+		pr_no_notice("%s get irq regval fail\n", __func__);
 		return IRQ_HANDLED;
 	}
 	if (regval) {
-		pr_info("%s thermal event 0x%02x\n", __func__, regval);
+		pr_no_info("%s thermal event 0x%02x\n", __func__, regval);
 		for (i = 0; i < RT5734_EVT_MAX; i++) {
 			if ((regval & (1 << i)) && rt5734_handler[i])
 				rt5734_handler[i](chip, i);
@@ -378,14 +378,14 @@ static int rt5734_init_irq(struct rt5734_chip *chip, struct device *dev)
 	if (np)
 		chip->irq = irq_of_parse_and_map(np, 0);
 	else {
-		pr_notice("%s no dts node\n", __func__);
+		pr_no_notice("%s no dts node\n", __func__);
 		return -ENODEV;
 	}
 
 	/* mask IRQ first */
 	ret = rt5734_write_byte(chip->spi, RT5734_IRQ_MASK_R, 0x83);
 	if (ret < 0) {
-		pr_notice("%s mask IRQ fail\n", __func__);
+		pr_no_notice("%s mask IRQ fail\n", __func__);
 		return -EINVAL;
 	}
 	/* clear IRQ */
@@ -395,13 +395,13 @@ static int rt5734_init_irq(struct rt5734_chip *chip, struct device *dev)
 		rt5734_irq_handler, NULL, IRQF_TRIGGER_FALLING|IRQF_ONESHOT,
 		"rt5734-irq", chip);
 	if (ret < 0) {
-		pr_notice("%s request irq fail\n", __func__);
+		pr_no_notice("%s request irq fail\n", __func__);
 		return -EINVAL;
 	}
 	/* unmask IRQ */
 	ret = rt5734_write_byte(chip->spi, RT5734_IRQ_MASK_R, 0x00);
 	if (ret < 0) {
-		pr_notice("%s unmask IRQ fail\n", __func__);
+		pr_no_notice("%s unmask IRQ fail\n", __func__);
 		return -EINVAL;
 	}
 
@@ -415,7 +415,7 @@ static int rt5734_spi_probe(struct spi_device *spi)
 	struct rt5734_chip *chip;
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_no_info("%s\n", __func__);
 
 	chip = devm_kzalloc(&spi->dev,
 		sizeof(struct rt5734_chip), GFP_KERNEL);
@@ -426,7 +426,7 @@ static int rt5734_spi_probe(struct spi_device *spi)
 #ifndef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
 	spi_set_drvdata(spi, chip);
 #else
-	pr_info("%s SSPM not need spi_set_drvdata\n", __func__);
+	pr_no_info("%s SSPM not need spi_set_drvdata\n", __func__);
 #endif /* if not CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 
 	rt5734_spi_init(spi);
@@ -436,14 +436,14 @@ static int rt5734_spi_probe(struct spi_device *spi)
 	if (ret < 0)
 		return ret;
 #else
-	pr_info("%s SSPM not need check_id\n", __func__);
+	pr_no_info("%s SSPM not need check_id\n", __func__);
 #endif /*-- !CONFIG_MTK_TINYSYS_SSPM_SUPPORT--*/
 
 #ifdef CONFIG_RT_REGMAP
 	chip->regmap_dev = rt_regmap_device_register_ex(&rt5734_regmap_props,
 			&rt5734_regmap_fops, &spi->dev, spi, -1, chip);
 	if (!chip->regmap_dev) {
-		pr_notice("%s register regmap fail\n", __func__);
+		pr_no_notice("%s register regmap fail\n", __func__);
 		return -EINVAL;
 	}
 #endif /* #ifdef CONFIG_RT_REGMAP */
@@ -451,16 +451,16 @@ static int rt5734_spi_probe(struct spi_device *spi)
 #ifndef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
 	rt5734_reg_init(spi);
 #else
-	pr_info("%s SSPM not need reg_init\n", __func__);
+	pr_no_info("%s SSPM not need reg_init\n", __func__);
 #endif /*-- !CONFIG_MTK_TINYSYS_SSPM_SUPPORT--*/
 
 	ret = rt5734_regulator_init(chip);
 	if (ret < 0) {
-		RT5734_pr_notice("%s regulator init fail\n", __func__);
+		RT5734_pr_no_notice("%s regulator init fail\n", __func__);
 		return -EINVAL;
 	}
 
-	pr_info("%s --OK!!--\n", __func__);
+	pr_no_info("%s --OK!!--\n", __func__);
 	return 0;
 
 #if RT5734_IRQ_ENABLE
@@ -503,7 +503,7 @@ static struct spi_driver rt5734_spi_driver = {
 
 static int __init rt5734_init(void)
 {
-	pr_notice("%s ver(%s)\n", __func__, RT5734_DRV_VERSION);
+	pr_no_notice("%s ver(%s)\n", __func__, RT5734_DRV_VERSION);
 	return spi_register_driver(&rt5734_spi_driver);
 }
 

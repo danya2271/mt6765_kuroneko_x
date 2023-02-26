@@ -357,13 +357,13 @@ static void oc_int_handler(enum PMIC_IRQ_ENUM intNo, const char *int_name)
 	case INT_VIO18_OC:
 	case INT_VCN33_OC:
 		/* keep OC interrupt and keep tracking */
-		pr_notice(PMICTAG "[PMIC_INT] PMIC OC: %s\n", int_name);
+		pr_no_notice(PMICTAG "[PMIC_INT] PMIC OC: %s\n", int_name);
 		break;
 	default:
 		/* issue AEE exception and disable OC interrupt */
 		kernel_dump_exception_reg();
 		pmic_enable_interrupt(intNo, 0, "PMIC");
-		pr_notice(PMICTAG "[PMIC_INT] disable OC interrupt: %s\n"
+		pr_no_notice(PMICTAG "[PMIC_INT] disable OC interrupt: %s\n"
 		       , int_name);
 		break;
 	}
@@ -395,12 +395,12 @@ static void md_oc_int_handler(enum PMIC_IRQ_ENUM intNo, const char *int_name)
 					   , (char *)&data_int32, 4);
 #endif
 	if (ret)
-		pr_notice("[%s] - exec_ccci_kern_func_by_md_id - msg fail\n"
+		pr_no_notice("[%s] - exec_ccci_kern_func_by_md_id - msg fail\n"
 			  , __func__);
 	pmic_enable_interrupt(intNo, 0, "PMIC");
-	pr_notice(PMICTAG "[PMIC_INT] disable OC interrupt: %s\n"
+	pr_no_notice(PMICTAG "[PMIC_INT] disable OC interrupt: %s\n"
 		  , int_name);
-	pr_info("[%s]Send msg pass\n", __func__);
+	pr_no_info("[%s]Send msg pass\n", __func__);
 }
 #endif
 
@@ -418,7 +418,7 @@ void wake_up_pmic(void)
 		pmic_wake_lock(&pmicThread_lock);
 		wake_up_process(pmic_thread_handle);
 	} else {
-		pr_notice(PMICTAG "[%s] pmic_thread_handle not ready\n"
+		pr_no_notice(PMICTAG "[%s] pmic_thread_handle not ready\n"
 		       , __func__);
 		return;
 	}
@@ -475,10 +475,10 @@ void pmic_enable_interrupt(enum PMIC_IRQ_ENUM intNo, unsigned int en, char *str)
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
 		if (intNo > INT_ENUM_MAX)
-			pr_notice(PMICTAG "[%s] fail intNo=%d\n"
+			pr_no_notice(PMICTAG "[%s] fail intNo=%d\n"
 				, __func__, intNo);
 		else
-			pr_info(PMICTAG "[%s] disable intNo=%d\n"
+			pr_no_info(PMICTAG "[%s] disable intNo=%d\n"
 				, __func__, intNo);
 		return;
 	}
@@ -502,7 +502,7 @@ void pmic_mask_interrupt(enum PMIC_IRQ_ENUM intNo, char *str)
 	unsigned int mask_reg;
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
-		pr_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
+		pr_no_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
 		return;
 	}
 	mask_reg = sp_interrupts[spNo].mask + 0x6 * sp_conNo;
@@ -523,7 +523,7 @@ void pmic_unmask_interrupt(enum PMIC_IRQ_ENUM intNo, char *str)
 	unsigned int mask_reg;
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
-		pr_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
+		pr_no_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
 		return;
 	}
 	mask_reg = sp_interrupts[spNo].mask + 0x6 * sp_conNo;
@@ -544,11 +544,11 @@ void pmic_register_interrupt_callback(enum PMIC_IRQ_ENUM intNo,
 	unsigned int spNo, sp_conNo, sp_irqNo;
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
-		pr_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
+		pr_no_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
 		return;
 	} else if (sp_interrupts[spNo].sp_irqs[sp_conNo][sp_irqNo].callback !=
 									NULL) {
-		pr_notice(PMICTAG "[%s] register callback conflict intNo=%d\n"
+		pr_no_notice(PMICTAG "[%s] register callback conflict intNo=%d\n"
 		       , __func__, intNo);
 		return;
 	}
@@ -565,7 +565,7 @@ void pmic_register_oc_interrupt_callback(enum PMIC_IRQ_ENUM intNo)
 	unsigned int spNo, sp_conNo, sp_irqNo;
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
-		pr_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
+		pr_no_notice(PMICTAG "[%s] fail intNo=%d\n", __func__, intNo);
 		return;
 	}
 	IRQLOG("[%s] intNo=%d\n", __func__, intNo);
@@ -658,7 +658,7 @@ static void pmic_sp_irq_handler(unsigned int spNo,
 	if (sp_int_status == 0)
 		return; /* this subpack control has no interrupt triggered */
 
-	pr_notice(PMICTAG "[PMIC_INT] Reg[0x%x]=0x%x\n"
+	pr_no_notice(PMICTAG "[PMIC_INT] Reg[0x%x]=0x%x\n"
 		  , (sp_interrupts[spNo].status + 0x2 * sp_conNo)
 		  , sp_int_status);
 
@@ -776,7 +776,7 @@ static void irq_thread_init(void)
 					    , (void *)NULL, "pmic_thread");
 	if (IS_ERR(pmic_thread_handle)) {
 		pmic_thread_handle = NULL;
-		pr_notice(PMICTAG "[pmic_thread] creation fails\n");
+		pr_no_notice(PMICTAG "[pmic_thread] creation fails\n");
 	} else {
 		IRQLOG("[pmic_thread] kthread_create Done\n");
 	}
@@ -851,10 +851,10 @@ void PMIC_EINT_SETTING(struct platform_device *pdev)
 		ret = request_irq(g_pmic_irq, (irq_handler_t)mt_pmic_eint_irq,
 			IRQF_TRIGGER_NONE, "pmic-eint", NULL);
 		if (ret > 0)
-			pr_notice(PMICTAG "EINT IRQ NOT AVAILABLE\n");
+			pr_no_notice(PMICTAG "EINT IRQ NOT AVAILABLE\n");
 		enable_irq_wake(g_pmic_irq);
 	} else
-		pr_notice(PMICTAG "can't find compatible node\n");
+		pr_no_notice(PMICTAG "can't find compatible node\n");
 
 	IRQLOG("[CUST_EINT] CUST_EINT_MT_PMIC_MT6357_NUM=%d\n"
 	       , g_eint_pmic_num);
@@ -1034,12 +1034,12 @@ int pmic_irq_debug_init(struct dentry *debug_dir)
 	struct dentry *pmic_irq_dir;
 
 	if (IS_ERR(debug_dir) || !debug_dir) {
-		pr_notice(PMICTAG "dir mtk_pmic does not exist\n");
+		pr_no_notice(PMICTAG "dir mtk_pmic does not exist\n");
 		return -1;
 	}
 	pmic_irq_dir = debugfs_create_dir("pmic_irq", debug_dir);
 	if (IS_ERR(pmic_irq_dir) || !pmic_irq_dir) {
-		pr_notice(PMICTAG "fail to mkdir /sys/kernel/debug/mtk_pmic/pmic_irq\n"
+		pr_no_notice(PMICTAG "fail to mkdir /sys/kernel/debug/mtk_pmic/pmic_irq\n"
 		       );
 		return -1;
 	}

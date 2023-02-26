@@ -216,7 +216,7 @@ int pmic_enable_hw_vbus_ovp(bool enable)
 	ret = pmic_set_register_value(PMIC_RG_VCDT_HV_EN, enable);
 #endif
 	if (ret != 0)
-		pr_notice("%s: failed, ret = %d\n", __func__, ret);
+		pr_no_notice("%s: failed, ret = %d\n", __func__, ret);
 
 	return ret;
 }

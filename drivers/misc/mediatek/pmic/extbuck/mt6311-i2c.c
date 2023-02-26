@@ -91,7 +91,7 @@ int mt6311_read_byte(unsigned char addr, unsigned char *data)
 	ret = mt6311_read_device(addr, 1, data);
 	mutex_unlock(&mt6311_i2c_access);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "read Reg[0x%x] fail, ret = %d\n"
+		pr_no_notice(MT6311TAG "read Reg[0x%x] fail, ret = %d\n"
 			  , addr, ret);
 		return ret;
 	}
@@ -107,7 +107,7 @@ int mt6311_write_byte(unsigned char addr, unsigned char data)
 	ret =  mt6311_write_device(addr, 1, &data);
 	mutex_unlock(&mt6311_i2c_access);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "write Reg[0x%x]=0x%x fail, ret = %d\n"
+		pr_no_notice(MT6311TAG "write Reg[0x%x]=0x%x fail, ret = %d\n"
 			  , addr, data, ret);
 		return ret;
 	}
@@ -124,7 +124,7 @@ int mt6311_assign_bit(unsigned char reg, unsigned char mask, unsigned char data)
 	mutex_lock(&mt6311_i2c_access);
 	ret = mt6311_read_device(reg, 1, &regval);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x\n"
+		pr_no_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x\n"
 			  , __func__, ret, reg, data, mask);
 		goto OUT_ASSIGN;
 	}
@@ -132,7 +132,7 @@ int mt6311_assign_bit(unsigned char reg, unsigned char mask, unsigned char data)
 	tmp |= (data & mask);
 	ret = mt6311_write_device(reg, 1, &tmp);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] assign bit fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x\n"
+		pr_no_notice(MT6311TAG "[%s] assign bit fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x\n"
 			  , __func__, ret, reg, data, mask);
 		goto OUT_ASSIGN;
 	}
@@ -152,7 +152,7 @@ int mt6311_read_interface(unsigned char reg, unsigned char *data,
 	ret = mt6311_read_device(reg, 1, &regval);
 	tmp = regval;
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x], mask=0x%x, shift=%d\n"
+		pr_no_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x], mask=0x%x, shift=%d\n"
 			  , __func__, ret, reg, mask, shift);
 		goto OUT_ASSIGN;
 	}
@@ -177,7 +177,7 @@ int mt6311_config_interface(unsigned char reg, unsigned char data,
 	ret = mt6311_read_device(reg, 1, &regval);
 	tmp = regval;
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x, shift=%d\n"
+		pr_no_notice(MT6311TAG "[%s] read fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x, shift=%d\n"
 			  , __func__, ret, reg, data, mask, shift);
 		goto OUT_ASSIGN;
 	}
@@ -187,7 +187,7 @@ int mt6311_config_interface(unsigned char reg, unsigned char data,
 
 	ret = mt6311_write_device(reg, 1, &tmp);
 	if (ret < 0) {
-		pr_notice("[%s] write fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x, shift=%d\n"
+		pr_no_notice("[%s] write fail(ret=%d), Reg[0x%x] data=0x%x, mask=0x%x, shift=%d\n"
 			  , __func__, ret, reg, data, mask, shift);
 		goto OUT_ASSIGN;
 	}
@@ -204,13 +204,13 @@ static int mt6311_check_id(void)
 	ret = mt6311_read_device(MT6311_CID, 1, &data);
 	if (ret < 0) {
 		/* MT6311 IO fail */
-		pr_notice(MT6311TAG "MT6311 check id fail\n");
+		pr_no_notice(MT6311TAG "MT6311 check id fail\n");
 		return -EIO;
 	}
 
 	if (data != MT6311_CID_CODE) {
 		/*MT6311 CID(0x%02x) not match */
-		pr_notice(MT6311TAG "MT6311 id(0x%x) error\n", data);
+		pr_no_notice(MT6311TAG "MT6311 id(0x%x) error\n", data);
 		return -EINVAL;
 	}
 	return 0;
@@ -234,7 +234,7 @@ static int mt6311_i2c_probe(struct i2c_client *client,
 #endif
 
 #ifdef IPIMB_MT6311
-	pr_notice(MT6311TAG "regulator not support for SSPM\n");
+	pr_no_notice(MT6311TAG "regulator not support for SSPM\n");
 	return 0;
 #else
 	ret = mt6311_regulator_init(&client->dev);
@@ -253,7 +253,7 @@ static int mt6311_i2c_probe(struct i2c_client *client,
 static int mt6311_i2c_remove(struct i2c_client *client)
 {
 #ifdef IPIMB_MT6311
-	pr_notice(MT6311TAG "regulator not support for SSPM\n");
+	pr_no_notice(MT6311TAG "regulator not support for SSPM\n");
 #else
 	mt6311_regulator_deinit();
 #endif
@@ -278,7 +278,7 @@ static unsigned char g_reg_value_mt6311;
 static ssize_t show_mt6311_access(
 		struct device *dev, struct device_attribute *attr, char *buf)
 {
-	pr_notice(MT6311TAG "[%s] 0x%x\n", __func__, g_reg_value_mt6311);
+	pr_no_notice(MT6311TAG "[%s] 0x%x\n", __func__, g_reg_value_mt6311);
 	return sprintf(buf, "0x%x\n", g_reg_value_mt6311);
 }
 
@@ -287,7 +287,7 @@ static ssize_t store_mt6311_access(
 		const char *buf, size_t size)
 {
 #ifdef IPIMB_MT6311
-	pr_notice(MT6311TAG "mt6311_access not support for SSPM\n");
+	pr_no_notice(MT6311TAG "mt6311_access not support for SSPM\n");
 	return size;
 #else
 	int ret;
@@ -295,10 +295,10 @@ static ssize_t store_mt6311_access(
 	unsigned int reg_value = 0;
 	unsigned int reg_address = 0;
 
-	pr_notice(MT6311TAG "[%s]\n", __func__);
+	pr_no_notice(MT6311TAG "[%s]\n", __func__);
 
 	if (buf != NULL && size != 0) {
-		pr_notice(MT6311TAG "[%s] size is %d, buf is %s\n"
+		pr_no_notice(MT6311TAG "[%s] size is %d, buf is %s\n"
 			  , __func__, (int)size, buf);
 		pvalue = (char *)buf;
 		addr = strsep(&pvalue, " ");
@@ -307,16 +307,16 @@ static ssize_t store_mt6311_access(
 			ret = kstrtou32(addr, 16, (unsigned int *)&reg_address);
 		if (val) {
 			ret = kstrtou32(val, 16, (unsigned int *)&reg_value);
-			pr_notice(MT6311TAG "[%s] write mt6311 reg 0x%x with value 0x%x!\n"
+			pr_no_notice(MT6311TAG "[%s] write mt6311 reg 0x%x with value 0x%x!\n"
 				  , __func__, reg_address, reg_value);
 			ret = mt6311_config_interface(reg_address
 					, reg_value, 0xFF, 0x0);
 		} else {
 			ret = mt6311_read_interface(reg_address
 					, &g_reg_value_mt6311, 0xFF, 0x0);
-			pr_notice(MT6311TAG "[%s] read mt6311 reg 0x%x with value 0x%x !\n"
+			pr_no_notice(MT6311TAG "[%s] read mt6311 reg 0x%x with value 0x%x !\n"
 				  , __func__, reg_address, g_reg_value_mt6311);
-			pr_notice(MT6311TAG "[%s] use \"cat mt6311_access\" to get value\n"
+			pr_no_notice(MT6311TAG "[%s] use \"cat mt6311_access\" to get value\n"
 				  , __func__);
 		}
 	}
@@ -361,11 +361,11 @@ static int __init mt6311_init(void)
 
 	/* MT6311 i2c driver register */
 #ifdef IPIMB_MT6311
-	pr_notice(MT6311TAG "Kernel driver not support for SSPM\n");
+	pr_no_notice(MT6311TAG "Kernel driver not support for SSPM\n");
 #else
 	ret = i2c_add_driver(&mt6311_driver);
 	if (ret != 0) {
-		pr_notice(MT6311TAG "failed to register mt6311 i2c driver\n");
+		pr_no_notice(MT6311TAG "failed to register mt6311 i2c driver\n");
 		return ret;
 	}
 	MT6311LOG("MT6311 i2c driver probe done\n");
@@ -373,11 +373,11 @@ static int __init mt6311_init(void)
 	if (is_mt6311_exist()) {
 		ret = platform_device_register(&mt6311_user_space_device);
 		if (ret)
-			pr_notice(MT6311TAG "failed to create mt6311_access file(device register fail)\n"
+			pr_no_notice(MT6311TAG "failed to create mt6311_access file(device register fail)\n"
 				  );
 		ret = platform_driver_register(&mt6311_user_space_driver);
 		if (ret)
-			pr_notice(MT6311TAG "failed to create mt6311_access file(driver register fail)\n"
+			pr_no_notice(MT6311TAG "failed to create mt6311_access file(driver register fail)\n"
 				  );
 		MT6311LOG("MT6311 user space driver probe done\n");
 	} else {

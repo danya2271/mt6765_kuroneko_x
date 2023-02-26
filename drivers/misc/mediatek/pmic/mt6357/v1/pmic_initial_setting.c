@@ -67,11 +67,11 @@ int PMIC_check_battery(void)
 	/*PMIC_upmu_set_baton_tdet_en(1);*/
 	val = mt6357_upmu_get_rgs_baton_undet();
 	if (val == 0) {
-		pr_debug("bat is exist.\n");
+		no_printk("bat is exist.\n");
 		is_battery_remove = 0;
 		return 1;
 	}
-	pr_debug("bat NOT exist.\n");
+	no_printk("bat NOT exist.\n");
 	is_battery_remove = 1;
 	return 0;
 }
@@ -79,7 +79,7 @@ int PMIC_check_battery(void)
 int PMIC_POWER_HOLD(unsigned int hold)
 {
 	if (hold > 1) {
-		pr_notice("[PMIC_KERNEL] %s hold = %d only 0 or 1\n",
+		pr_no_notice("[PMIC_KERNEL] %s hold = %d only 0 or 1\n",
 			__func__, hold);
 		return -1;
 	}

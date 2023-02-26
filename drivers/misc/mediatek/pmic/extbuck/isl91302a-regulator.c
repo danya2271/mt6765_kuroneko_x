@@ -165,7 +165,7 @@ static int isl91302a_set_voltage_sel(
 		unsigned int selector)
 {
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct isl91302a_regulator_info *info =
@@ -191,7 +191,7 @@ static int isl91302a_get_voltage_sel(
 			struct mtk_simple_regulator_desc *mreg_desc)
 {
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct isl91302a_regulator_info *info =
@@ -214,7 +214,7 @@ static int isl91302a_set_mode(
 		struct mtk_simple_regulator_desc *mreg_desc, unsigned int mode)
 {
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct isl91302a_regulator_info *info =
@@ -240,7 +240,7 @@ static unsigned int isl91302a_get_mode(
 		struct mtk_simple_regulator_desc *mreg_desc)
 {
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-	pr_notice("%s not support for sspm\n", __func__);
+	pr_no_notice("%s not support for sspm\n", __func__);
 	return 0;
 #else
 	struct isl91302a_regulator_info *info =
@@ -250,7 +250,7 @@ static unsigned int isl91302a_get_mode(
 
 	ret = isl91302a_read_byte(mreg_desc->client, info->mode_reg, &regval);
 	if (ret < 0) {
-		ISL91302A_pr_notice("%s read mode fail\n", __func__);
+		ISL91302A_pr_no_notice("%s read mode fail\n", __func__);
 		return ret;
 	}
 
@@ -268,12 +268,12 @@ static int isl91302a_enable_ipi(struct mtk_simple_regulator_desc *mreg_desc)
 
 	buck_id = mreg_desc->rdesc.id;
 	if (buck_id != 1) {
-		pr_notice("%s only support proc2\n", __func__);
+		pr_no_notice("%s only support proc2\n", __func__);
 		return 0;
 	}
 
 	ret = extbuck_ipi_enable(buck_id, 1);
-	pr_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
+	pr_no_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
 				mreg_desc->rdesc.name, buck_id, ret);
 	dsb(sy);
 	mdelay(1);
@@ -290,12 +290,12 @@ static int isl91302a_disable_ipi(struct mtk_simple_regulator_desc *mreg_desc)
 
 	buck_id = mreg_desc->rdesc.id;
 	if (buck_id != 1) {
-		pr_notice("%s only support proc2\n", __func__);
+		pr_no_notice("%s only support proc2\n", __func__);
 		return 0;
 	}
 
 	ret = extbuck_ipi_enable(buck_id, 0);
-	pr_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
+	pr_no_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
 				mreg_desc->rdesc.name, buck_id, ret);
 	if (ret != 0)
 		return -EINVAL;
@@ -309,12 +309,12 @@ static int isl91302a_is_enabled_ipi(struct mtk_simple_regulator_desc *mreg_desc)
 
 	buck_id = mreg_desc->rdesc.id;
 	if (buck_id != 1) {
-		pr_notice("%s only support proc2\n", __func__);
+		pr_no_notice("%s only support proc2\n", __func__);
 		return 0;
 	}
 
 	ret = extbuck_ipi_enable(buck_id, 0xF);
-	pr_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
+	pr_no_info_ratelimited("%s [%s] id(%d), ret(%d)\n", __func__,
 			mreg_desc->rdesc.name, buck_id, ret);
 	if (ret != 0 && ret != 1)
 		return -EINVAL;
@@ -402,7 +402,7 @@ static int isl91302a_buck_set_ramp_dly(
 
 	switch (ramp_dly) {
 	default:
-		pr_info("%s Invalid ramp delay, set to default 2.5 mV/us\n",
+		pr_no_info("%s Invalid ramp delay, set to default 2.5 mV/us\n",
 			__func__);
 		ret = isl91302a_set_ramp_val(mreg_desc, 0, 0);
 		break;
@@ -440,7 +440,7 @@ int isl91302a_regulator_init(struct isl91302a_chip *chip)
 	int ret = 0, i = 0;
 
 	if (chip == NULL) {
-		ISL91302A_pr_notice("%s Null chip info\n", __func__);
+		ISL91302A_pr_no_notice("%s Null chip info\n", __func__);
 		return -1;
 	}
 
@@ -453,7 +453,7 @@ int isl91302a_regulator_init(struct isl91302a_chip *chip)
 		ret = mtk_simple_regulator_register(&isl91302a_desc_table[i],
 				chip->dev, &isl91302a_regulator_ext_ops, NULL);
 		if (ret < 0) {
-			ISL91302A_pr_notice(
+			ISL91302A_pr_no_notice(
 				"%s register mtk simple regulator fail\n"
 				, __func__);
 		}

@@ -39,7 +39,7 @@ static int isl91302a_read_device(void *client, u32 addr, int len, void *dst)
 	u32 rx_buf;
 
 	if (len != 1) {
-		pr_notice("%s not support multi read now\n", __func__);
+		pr_no_notice("%s not support multi read now\n", __func__);
 		return -EINVAL;
 	}
 
@@ -61,9 +61,9 @@ static int isl91302a_read_device(void *client, u32 addr, int len, void *dst)
 
 	*(unsigned char *)dst = (rx_buf & 0xff000000) >> 24;
 #if 0
-	pr_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, *val);
-	pr_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
-	pr_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
+	pr_no_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, *val);
+	pr_no_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
+	pr_no_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
 #endif
 	return ret;
 }
@@ -80,7 +80,7 @@ int isl91302a_write_device(void *client,
 	u32 rx_buf;
 
 	if (len != 1) {
-		pr_notice("%s not support multi write now\n", __func__);
+		pr_no_notice("%s not support multi write now\n", __func__);
 		return -EINVAL;
 	}
 
@@ -101,9 +101,9 @@ int isl91302a_write_device(void *client,
 		return ret;
 
 #if 0
-	pr_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, value);
-	pr_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
-	pr_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
+	pr_no_info("%s addr 0x%02x = 0x%02x\n", __func__, addr, value);
+	pr_no_info("%s tx_buf = 0x%08x\n", __func__, tx_buf);
+	pr_no_info("%s rx_buf = 0x%08x\n", __func__, rx_buf);
 #endif
 	return ret;
 }
@@ -171,7 +171,7 @@ int isl91302a_read_byte(void *client, uint32_t addr, uint32_t *value)
 	ret = isl91302a_read_device(chip->spi, addr, 1, value);
 #endif /* CONFIG_RT_REGMAP */
 	if (ret < 0)
-		pr_notice("%s read addr0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s read addr0x%02x fail\n", __func__, addr);
 	return ret;
 }
 EXPORT_SYMBOL(isl91302a_read_byte);
@@ -188,7 +188,7 @@ int isl91302a_write_byte(void *client, uint32_t addr, uint32_t data)
 	ret =  isl91302a_write_device(chip->spi, addr, 1, &data);
 #endif /* CONFIG_RT_REGMAP */
 	if (ret < 0)
-		pr_notice("%s write addr0x%02x fail\n", __func__, addr);
+		pr_no_notice("%s write addr0x%02x fail\n", __func__, addr);
 	return ret;
 }
 
@@ -204,7 +204,7 @@ int isl91302a_assign_bit(void *client,
 	mutex_lock(&ri->io_lock);
 	ret = isl91302a_read_byte(spi, reg, &regval);
 	if (ret < 0) {
-		pr_notice("%s fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s fail reg0x%02x data0x%02x\n",
 				__func__, reg, data);
 		goto OUT_ASSIGN;
 	}
@@ -212,7 +212,7 @@ int isl91302a_assign_bit(void *client,
 	tmp |= (data & mask);
 	ret = isl91302a_write_byte(spi, reg, tmp);
 	if (ret < 0)
-		pr_notice("%s fail reg0x%02x data0x%02x\n",
+		pr_no_notice("%s fail reg0x%02x data0x%02x\n",
 				__func__, reg, tmp);
 OUT_ASSIGN:
 	mutex_unlock(&ri->io_lock);
@@ -258,7 +258,7 @@ static struct mt_chip_conf isl91302a_spi_config = {
 
 static void isl91302a_spi_init(struct spi_device *spi)
 {
-	pr_info("%s inited\n", __func__);
+	pr_no_info("%s inited\n", __func__);
 	spi->bits_per_word = 32;
 	spi->controller_data = &isl91302a_spi_config;
 	mdelay(100);
@@ -276,7 +276,7 @@ static void isl91302a_reg_init(struct spi_device *spi)
 	ret |= isl91302a_write_byte(spi, 0x64, 0x76);
 	ret |= isl91302a_write_byte(spi, 0x65, 0x00);
 	if (ret < 0)
-		ISL91302A_pr_notice("%s init fail\n", __func__);
+		ISL91302A_pr_no_notice("%s init fail\n", __func__);
 }
 
 static int isl91302a_check_id(struct spi_device *spi)
@@ -286,12 +286,12 @@ static int isl91302a_check_id(struct spi_device *spi)
 
 	ret = isl91302a_read_device(spi, ISL91302A_CHIPNAME_R, 1, &data);
 	if (ret < 0) {
-		pr_notice("%s IO fail\n", __func__);
+		pr_no_notice("%s IO fail\n", __func__);
 		return -EIO;
 	}
 
 	if (data != ISL91302A_CHIPNAME) {
-		pr_notice("%s ID(0x%02x) not match\n", __func__, data);
+		pr_no_notice("%s ID(0x%02x) not match\n", __func__, data);
 		return -EINVAL;
 	}
 	return 0;
@@ -302,7 +302,7 @@ static int isl91302a_spi_probe(struct spi_device *spi)
 	struct isl91302a_chip *chip;
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_no_info("%s\n", __func__);
 
 	chip = devm_kzalloc(&spi->dev,
 		sizeof(struct isl91302a_chip), GFP_KERNEL);
@@ -322,7 +322,7 @@ static int isl91302a_spi_probe(struct spi_device *spi)
 	chip->regmap_dev = rt_regmap_device_register_ex(&isl91302a_regmap_props,
 			&isl91302a_regmap_fops, &spi->dev, spi, -1, chip);
 	if (!chip->regmap_dev) {
-		pr_notice("%s register regmap fail\n", __func__);
+		pr_no_notice("%s register regmap fail\n", __func__);
 		return -EINVAL;
 	}
 #endif /* #ifdef CONFIG_RT_REGMAP */
@@ -331,14 +331,14 @@ static int isl91302a_spi_probe(struct spi_device *spi)
 
 	ret = isl91302a_regulator_init(chip);
 	if (ret < 0) {
-		ISL91302A_pr_notice("%s regulator init fail\n", __func__);
+		ISL91302A_pr_no_notice("%s regulator init fail\n", __func__);
 #ifdef CONFIG_RT_REGMAP
 		rt_regmap_device_unregister(chip->regmap_dev);
 #endif /* CONFIG_RT_REGMAP */
 		return -EINVAL;
 	}
 
-	pr_info("%s --OK!!--\n", __func__);
+	pr_no_info("%s --OK!!--\n", __func__);
 	return 0;
 }
 
@@ -373,7 +373,7 @@ static struct spi_driver isl91302a_spi_driver = {
 
 static int __init isl91302a_init(void)
 {
-	pr_notice("%s ver(%s)\n", __func__, ISL91302A_DRV_VERSION);
+	pr_no_notice("%s ver(%s)\n", __func__, ISL91302A_DRV_VERSION);
 	return spi_register_driver(&isl91302a_spi_driver);
 }
 

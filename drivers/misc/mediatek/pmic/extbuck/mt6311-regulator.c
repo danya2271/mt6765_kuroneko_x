@@ -103,7 +103,7 @@ static int mt6311_enable(struct mtk_simple_regulator_desc *mreg_desc)
 	ret = mt6311_config_interface(mreg_desc->enable_reg
 				, 1, MT6311_enable_mask, mreg_desc->enable_bit);
 	if (ret < 0)
-		pr_notice(MT6311TAG "[%s] enable (%s) fail, ret = %d\n",
+		pr_no_notice(MT6311TAG "[%s] enable (%s) fail, ret = %d\n",
 			__func__, mreg_desc->rdesc.name, ret);
 
 	return ret;
@@ -115,14 +115,14 @@ static int mt6311_disable(struct mtk_simple_regulator_desc *mreg_desc)
 
 	MT6311LOG("[%s] disable (%s)\n", __func__, mreg_desc->rdesc.name);
 	if (mreg_desc->rdev->use_count == 0) {
-		pr_notice(MT6311TAG "MT6311 should not be disable (use_count=%d)\n"
+		pr_no_notice(MT6311TAG "MT6311 should not be disable (use_count=%d)\n"
 			  , mreg_desc->rdev->use_count);
 		return -1;
 	}
 	ret = mt6311_config_interface(mreg_desc->enable_reg
 				, 0, MT6311_enable_mask, mreg_desc->enable_bit);
 	if (ret < 0)
-		pr_notice(MT6311TAG "[%s] disable (%s) fail, ret = %d\n",
+		pr_no_notice(MT6311TAG "[%s] disable (%s) fail, ret = %d\n",
 			__func__, mreg_desc->rdesc.name, ret);
 
 	return ret;
@@ -136,7 +136,7 @@ static int mt6311_is_enabled(struct mtk_simple_regulator_desc *mreg_desc)
 	ret = mt6311_read_interface(mreg_desc->enable_reg
 			, &en, MT6311_enable_mask, mreg_desc->enable_bit);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] Check (%s) status fail, ret = %d\n",
+		pr_no_notice(MT6311TAG "[%s] Check (%s) status fail, ret = %d\n",
 			__func__, mreg_desc->rdesc.name, ret);
 		return ret;
 	}
@@ -159,7 +159,7 @@ static int mt6311_set_mode(
 				, mode, MT6311_mode_mask, MT6311_mode_bit);
 		break;
 	default:
-		pr_notice(MT6311TAG "[%s] Set Wrong mode = %d\n"
+		pr_no_notice(MT6311TAG "[%s] Set Wrong mode = %d\n"
 			  , __func__, mode);
 		return -1;
 	}
@@ -175,7 +175,7 @@ static unsigned int mt6311_get_mode(
 	ret = mt6311_read_interface(mt6311_proc_mode_reg
 				, &mode, MT6311_mode_mask, MT6311_mode_bit);
 	if (ret < 0) {
-		pr_notice(MT6311TAG "[%s] read mode fail, ret = %d\n"
+		pr_no_notice(MT6311TAG "[%s] read mode fail, ret = %d\n"
 				, __func__, ret);
 		return 2;
 	}
@@ -233,7 +233,7 @@ int mt6311_regulator_init(struct device *dev)
 		ret = mtk_simple_regulator_register(&mt6311_desc_table[i],
 				dev, &mt6311_regulator_ext_ops, NULL);
 		if (ret < 0)
-			pr_notice(MT6311TAG "%s register mtk simple regulator fail\n"
+			pr_no_notice(MT6311TAG "%s register mtk simple regulator fail\n"
 				  , __func__);
 	}
 	return 0;
